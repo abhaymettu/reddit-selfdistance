@@ -25,16 +25,19 @@ CONTEXT    <- 70   # chars either side of the match
 feat <- readRDS("out/features.rds")
 files <- list.files("data", pattern = "\\.csv$", full.names = TRUE)
 
+# Validate on the communities the Tier 2 claim is made about. A dictionary validated on
+# r/fitness would describe a measure nobody is using.
+TIER2 <- c("anxiety", "socialanxiety", "healthanxiety", "depression", "lonely", "suicidewatch")
+
 # Re-read text for the sampled posts only. features.rds deliberately does not carry full
 # text; dup_key (first 200 chars of the normalised post) is the join key back to source.
+# Only the six Tier 2 communities are read — loading all 47 files to sample 200 posts meant
+# a multi-minute pass over 1.2 GB every run, which made this the flakiest script here.
+files <- files[grepl(paste0("^(", paste(TIER2, collapse = "|"), ")_"), basename(files))]
 raw <- rbindlist(lapply(files, function(f)
   fread(f, select = c("subreddit", "post"), showProgress = FALSE)))
 raw[, dup_key := stri_sub(normalise(post), 1, 200)]
 raw <- raw[!duplicated(dup_key)]
-
-# Validate on the communities the Tier 2 claim is made about. A dictionary validated on
-# r/fitness would describe a measure nobody is using.
-TIER2 <- c("anxiety", "socialanxiety", "healthanxiety", "depression", "lonely", "suicidewatch")
 d <- merge(feat[n_tok >= 25 & subreddit %in% TIER2, .(dup_key, n_ought, n_crit, subreddit)],
            raw[, .(dup_key, post)], by = "dup_key")
 d[, norm := normalise(post)]
