@@ -13,12 +13,8 @@
 
 suppressMessages({library(data.table); library(stringi)})
 
-# stringi over a lowercased copy. No tokenizer, no NLP dependency.
-# Written to a file rather than passed via `Rscript -e`: backslash escapes in these
-# patterns do not survive the shell reliably, and they fail *silently* by matching
-# nothing, which looks exactly like a real null result. Cost me a debugging cycle.
-PRON_1SG <- "\\b(i|me|my|mine|myself|i'm|i've|i'll|i'd)\\b"
-TOKEN    <- "[a-z0-9']+"
+# Patterns live in lexicons.R so the test suite and this pipeline share one definition.
+source("lexicons.R")
 
 files <- list.files("data", pattern = "\\.csv$", full.names = TRUE)
 if (!length(files)) stop("No CSVs in data/. See README.")
@@ -28,9 +24,7 @@ feat <- rbindlist(lapply(files, function(f) {
   win  <- sub("^.*_", "", base)
   d <- fread(f, select = c("subreddit", "author", "date", "post", "n_words"),
              showProgress = FALSE)
-  p <- stri_trans_tolower(d$post)
-  p <- stri_replace_all_regex(p, "https?://\\S+|www\\.\\S+", " ")  # URLs are not language
-  p <- stri_replace_all_regex(p, "&amp;#x200b;|&amp;|&gt;|&lt;", " ")  # reddit html entities
+  p <- normalise(d$post)   # shared with the validation sampler, so precision describes this
   data.table(
     subreddit = d$subreddit,
     author    = d$author,
@@ -41,6 +35,14 @@ feat <- rbindlist(lapply(files, function(f) {
     n_tok     = stri_count_regex(p, TOKEN),
     n_words_ds = d$n_words,          # dataset's textacy count, kept only to cross-check
     n_1sg     = stri_count_regex(p, PRON_1SG),
+    # Tier 2. Ought is net of fillers: a filler match is also an OUGHT match by
+    # construction, so it is subtracted rather than counted separately.
+    n_ought   = stri_count_regex(p, OUGHT) - stri_count_regex(p, OUGHT_FILLER),
+    n_advice  = stri_count_regex(p, ADVICE),
+    n_ideal   = stri_count_regex(p, IDEAL),
+    n_crit    = stri_count_regex(p, SELFCRIT),
+    n_2nd     = stri_count_regex(p, PRON_2ND),
+    n_3rd     = stri_count_regex(p, PRON_3RD),
     dup_key   = stri_sub(p, 1, 200)  # for dedup; full text never leaves this script
   )
 }))
@@ -54,7 +56,18 @@ ok <- feat[n_tok > 0 & n_words_ds > 0]
 cat("Token count agreement with dataset n_words: r =",
     sprintf("%.4f\n", cor(ok$n_tok, ok$n_words_ds)))
 
-feat[, rate_1sg := n_1sg / n_tok]
+stopifnot(feat$n_ought >= 0)  # fillers are a strict subset of OUGHT; negatives = bad regex
+
+for (v in c("1sg", "ought", "advice", "ideal", "crit", "2nd", "3rd"))
+  set(feat, j = paste0("rate_", v), value = feat[[paste0("n_", v)]] / feat$n_tok)
+
+cat("\nMarker base rates (per token) and share of posts with >=1 hit:\n")
+print(data.table(marker = c("ought", "advice", "ideal", "crit"),
+                 mean_rate = round(c(mean(feat$rate_ought), mean(feat$rate_advice),
+                                     mean(feat$rate_ideal), mean(feat$rate_crit)), 5),
+                 pct_posts_with_hit = round(100 * c(mean(feat$n_ought > 0),
+                   mean(feat$n_advice > 0), mean(feat$n_ideal > 0),
+                   mean(feat$n_crit > 0)), 1)))
 
 saveRDS(feat, "out/features.rds")
 cat("Wrote out/features.rds\n")

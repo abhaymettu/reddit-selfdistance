@@ -1,0 +1,202 @@
+---
+title: "Self-distancing, self-criticism, and the ought/ideal split in Reddit mental health language"
+author: "Abhay Nihal"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    theme: cosmo
+    embed-resources: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| include: false
+library(data.table)
+knitr::opts_knit$set(root.dir = normalizePath("."))
+tier1 <- fread("out/tier1_results.csv")
+tier2 <- fread("out/tier2_results.csv")
+main2 <- fread("out/tier2_main_effects.csv")
+```
+
+## Question
+
+Do linguistic markers of self-distancing and self-criticism track depressive symptoms,
+and does the **ought**-self signal behave differently from the **ideal**-self signal?
+
+Higgins' (1987) self-discrepancy theory makes a specific prediction: discrepancy from the
+*ought* self produces agitation-related affect (anxiety), discrepancy from the *ideal*
+self produces dejection-related affect (sadness). If those two discrepancies have
+separable linguistic signatures, the prediction is testable at scale. That is the target
+of Tier 2. Tier 1 is the replication groundwork that has to hold first.
+
+## Data
+
+Reddit Mental Health Dataset (Low et al., 2020, *JMIR* 22(10):e22635), Zenodo
+[3941387](https://zenodo.org/records/3941387), public domain. 16 subreddits × 3 time
+windows (Jan–Apr 2018, Jan–Apr 2019, Jan–Apr 2020), 478,675 posts.
+
+**There is no symptom severity measure anywhere in this dataset.** Every "depression"
+contrast below is subreddit membership, which is a crude proxy. Nothing here should be
+read as an association with clinical severity.
+
+Two data-quality findings worth recording:
+
+1. The release ships `liwc_1st_pers`, which looks like it would give first-person
+   pronoun rates for free. It does not — on a r/depression post containing four
+   unambiguous first-person singular pronouns it reads 0. All measures here are computed
+   from raw text and validated against the dataset's independent token count
+   (agreement *r* = .9995).
+2. The release ships **one post per author per subreddit-window**. This makes the
+   originally planned Tier 3 design (≥5 posts spanning ≥30 days) impossible; see
+   *Tier 3* below.
+
+## Tier 1 — the register confound
+
+The obvious design compares depression subreddits (depression, lonely, suicidewatch)
+against non-mental-health subreddits (fitness, jokes, personalfinance, teaching).
+
+```{r tier1}
+tier1[, .(contrast, window, n, r = round(r, 3),
+          ci = sprintf("[%.3f, %.3f]", ci_lo, ci_hi), d = round(d, 3))]
+```
+
+That design returns *r* ≈ .47, *d* ≈ 1.08 — roughly 3.5× the meta-analytic I-talk effect
+of *r* ≈ .13. The analysis script carries a preregistered `|r| > 0.30` abort gate, and it
+fired.
+
+The gate was right, but the cause is not a coding bug. It is **confounded genre**.
+r/depression and r/suicidewatch are communities whose norm is first-person confessional
+narrative; r/personalfinance and r/teaching are topic-oriented Q&A. Any first-person
+pronoun measure separates those two registers whether or not anyone is depressed.
+Dropping r/jokes — the most third-person control — barely moved the estimate, so it is
+not one bad control, it is the whole arm.
+
+![](out/fig_1sg_by_subreddit.png)
+
+Re-running against **other mental-health subreddits**, so that every post in both arms is
+first-person distress narrative and only the disorder varies, roughly halves the effect
+to *r* ≈ .21–.22, stable across all three windows and robust to removing the 4.9% of
+authors who post in both arms.
+
+**About half of the naive association was register, not depression.** The residual is
+still above the literature's .13, and I would expect more of the same explanation: even
+among mental-health communities, r/depression is more self-focused-by-topic than r/adhd.
+r/autism sitting down among the topical subreddits in the figure is the same effect seen
+from the other side.
+
+## Tier 2 — ought versus ideal
+
+Hypotheses were preregistered in `PREREG.md` and committed to git before `04_tier2.R`
+existed, so the ordering is verifiable in the repository history.
+
+The test is a **double dissociation** between two families, both first-person distress
+narrative, which holds constant the register confound that ate half of Tier 1:
+
+- **Agitation family:** anxiety, socialanxiety, healthanxiety
+- **Dejection family:** depression, lonely, suicidewatch
+
+Markers are restricted to **first-person subjects**. This matters more than any other
+design decision: "you should see a doctor" is a modal verb of obligation containing no
+ought self at all, and support communities are saturated with it. An unrestricted modal
+count measures how much advice a community gives. Second- and third-person modals are
+counted separately and entered as a covariate.
+
+```{r tier2-main}
+main2[, .(marker, d_raw = round(d_raw, 3), OR_presence = round(or_presence, 3))]
+```
+
+Positive = higher in the dejection family. Ought runs slightly the other way, ideal and
+self-criticism run with dejection.
+
+Because both markers are measured on the *same post*, the interaction is tested as a
+within-post difference score — z-scored per marker, then `delta = z(ideal) − z(ought)` —
+which avoids the correlated-rows problem a stacked model would create.
+
+```{r tier2-h2a}
+tier2[, .(test, window, n, effect = round(effect, 3),
+          ci = sprintf("[%.3f, %.3f]", lo, hi))]
+```
+
+**H2a holds in the preregistered direction and is stable across all three windows.** The
+preregistered falsification condition — both markers moving the same direction, which
+would indicate generic distress rather than self-discrepancy structure — did not occur.
+
+### Three caveats that matter more than the point estimate
+
+**The dissociation is asymmetric.** The ought effect (*d* = −0.033) is below the
+preregistered smallest effect size of interest of 0.10. It points the way Higgins
+predicts, but it cannot stand on its own; the crossover is carried by the ideal marker.
+This is weaker than a true double dissociation and should be described that way.
+
+**The unit of analysis is six communities, not 197,106 posts.** The post-level CIs above
+are hairline-thin because *n* is large, but they describe uncertainty about *these six
+communities*. For the family-level claim the effective sample size is 6. Treating each
+community as one observation, the exact permutation test gives *p* = 0.10 — which is the
+**floor** for a 3-vs-3 split, attained because the rank separation is perfect (all three
+agitation communities negative, all three dejection communities positive). The honest
+summary is that the community-level evidence is as strong as six communities can make it,
+and that is not very strong.
+
+**A correction went against the finding and it survived.** Hand-coding the validation
+sample showed that `had to` was capturing past-tense external necessity ("i had to call
+the cops", "i had to be rushed to the e.r.") rather than an internalised self-guide. It
+was in an early draft of the lexicon but *not* in the preregistered pattern. Removing it
+restored the preregistered definition and weakened the result (delta *d* 0.144 → 0.133);
+the direction and cross-window stability were unchanged.
+
+## Tier 3 — descoped, not deferred
+
+The plan called for mixed-effects models on users with ≥5 posts spanning ≥30 days. The
+release ships one post per author per subreddit-window, so that design cannot be run.
+What exists is a thin panel: 20,575 authors appear in ≥2 windows and 1,682 in all three,
+at most three observations each at irregular multi-month gaps.
+
+That supports a coarse between-window within-person contrast. It does **not** support the
+question that motivated Tier 3 — whether self-distanced language shifts *before* symptom
+language — which needs post-level sequencing this data does not contain. Reframing it as a
+between-window contrast is honest; calling it a prediction model would not be.
+
+## Limitations
+
+Written with the same care as the results, because with this data they are the results.
+
+- **No clinical diagnosis anywhere.** Subreddit membership is a poor disorder proxy. Each
+  community mixes people who are suffering, people supporting someone else, and people
+  who read for years before posting once.
+- **The families are not disorders.** "Agitation" and "dejection" are my groupings of six
+  communities. r/healthanxiety in particular has a distinctive symptom-description
+  register that may not generalise to anxiety broadly.
+- **Everything is correlational**, between-persons, and cross-sectional at the post level.
+- **Large *n* is not strong evidence.** At *n* > 100k every *p* < .001 and carries no
+  information, so effect sizes and CIs are reported and *p*-values omitted; a smallest
+  effect size of interest (|d| ≥ 0.10) was fixed before estimation. The community-level
+  permutation test is reported precisely because it does not benefit from the large *n*.
+- **Dictionary methods miss sarcasm, quotation, and negation**, and cannot resolve
+  coreference. H2c (self-distancing via second/third-person self-reference) is reported as
+  exploratory for exactly this reason: `you` cannot be separated from addressing the
+  reader without coreference resolution.
+- **Self-selected sample.** People who post to r/depression differ from depressed people
+  who do not post, in ways that plausibly correlate with how they write about themselves.
+- **The time windows are not a balanced panel**, and the 2020 window overlaps the onset of
+  COVID-19, which changed both who posted and what they posted about.
+- **Ethics.** Data is public domain, but no post text or usernames are committed to the
+  repository; the validation sample containing raw text is gitignored, and only aggregate
+  results are published.
+
+## Reproducing
+
+```sh
+Rscript 01_audit.R        # go/no-go on the data release
+Rscript test_lexicons.R   # 36 assertions on the dictionaries — run before trusting Tier 2
+Rscript 02_features.R     # text -> out/features.rds  (the only pass over raw text)
+Rscript 03_tier1.R
+Rscript 04_tier2.R
+Rscript 05_validate.R     # regenerate the hand-coding sample
+quarto render report.qmd
+```

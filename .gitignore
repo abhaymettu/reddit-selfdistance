@@ -3,3 +3,5 @@ out/features.rds
 *.Rproj.user
 .Rhistory
 urls*.txt
+out/validation_sample.csv
+record.json

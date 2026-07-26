@@ -14,9 +14,9 @@ the target. Tier 1 below is the replication groundwork that has to hold first.
 |---|---|---|
 | 0 | Data audit / go-no-go | done |
 | 1 | I-talk vs depression grouping | **done — see Findings** |
-| 2 | Ought vs ideal double dissociation | specified in `PREREG.md`, not yet run |
+| 2 | Ought vs ideal double dissociation | **done — supported, with caveats** |
 | 3 | Within-person over time | **descoped, see below** |
-| 4 | Limitations | drafted below, expanded in the final report |
+| 4 | Limitations | below, and in `report.qmd` |
 
 ## Data
 
@@ -98,6 +98,76 @@ depression scales administered to the people who produced the language. This dat
 no symptom measure at all, so the criterion here is subreddit membership — a different and
 much cruder estimand. Landing near .13 would have been a coincidence worth distrusting.
 A DAIC-WOZ request (PHQ-8-scored interview transcripts) is out for the severity version.
+
+## Findings (Tier 2)
+
+Hypotheses were preregistered in `PREREG.md` and **committed to git before `04_tier2.R`
+existed** — the ordering is verifiable in the history, not just asserted.
+
+The test is a double dissociation between two families that are both first-person distress
+narrative, so the Tier 1 register confound is held constant:
+
+- **Agitation family:** anxiety, socialanxiety, healthanxiety
+- **Dejection family:** depression, lonely, suicidewatch
+
+Markers are restricted to first-person subjects, which matters more than any other design
+choice here: *"you should see a doctor"* is a modal of obligation containing no ought self,
+and support communities are full of it. Second/third-person modals are counted separately
+and entered as a covariate.
+
+| Marker | *d* (+ = higher in dejection) | OR for ≥1 occurrence |
+|---|---|---|
+| ought (self-directed obligation) | **−0.033** | 0.92 |
+| ideal (counterfactual / unmet aspiration) | **+0.153** | 1.82 |
+| self-criticism (FSCRS-seeded) | **+0.156** | 2.39 |
+
+Because both markers come from the same post, the interaction is tested as a within-post
+difference score, `delta = z(ideal) − z(ought)`, avoiding the correlated-rows problem a
+stacked model would create. Higgins predicts delta is higher in the dejection family:
+
+| Window | *d* for delta | 95% CI |
+|---|---|---|
+| 2019 (primary) | **0.133** | [0.162, 0.209] |
+| 2018 (held out) | 0.129 | [0.152, 0.210] |
+| 2020 (held out) | 0.120 | [0.145, 0.188] |
+
+Direction holds in all three windows. The preregistered falsification condition — both
+markers moving the same direction, i.e. generic distress rather than self-discrepancy
+structure — **did not occur**. Robust to removing the 4.1% of authors in both families,
+and leave-one-subreddit-out keeps delta in [0.100, 0.180].
+
+### Three caveats that matter more than the point estimate
+
+**It is asymmetric.** The ought effect (*d* = −0.033) is below the preregistered SESOI of
+0.10. It points the way Higgins predicts but cannot stand alone — the crossover is carried
+by the ideal marker. That is weaker than a true double dissociation and is reported as such.
+
+**The unit of analysis is six communities, not 197,106 posts.** The post-level CIs are
+hairline-thin because *n* is huge, but they describe uncertainty about *these six
+communities*. Treating each community as one observation, the exact permutation test gives
+*p* = 0.10 — the **floor** for a 3-vs-3 split, attained because rank separation is perfect:
+
+| Family | Subreddit | mean delta |
+|---|---|---|
+| agitation | healthanxiety | −0.066 |
+| agitation | socialanxiety | −0.101 |
+| agitation | anxiety | −0.168 |
+| dejection | lonely | +0.162 |
+| dejection | suicidewatch | +0.092 |
+| dejection | depression | +0.030 |
+
+As strong as six communities can make it, which is not very strong.
+
+**A correction went against the finding and it survived.** Hand-coding the validation
+sample showed `had to` was catching past-tense external necessity ("i had to call the
+cops", "i had to be rushed to the e.r.") rather than an internalised self-guide. It was in
+an early lexicon draft but *not* in the preregistered pattern; removing it restored the
+prereg definition and weakened the result (delta *d* 0.144 → 0.133). Direction and
+cross-window stability were unchanged.
+
+`test_lexicons.R` holds 36 assertions on the dictionaries — mostly that advice-giving does
+not leak into the ought measure, which is the single confound the design rests on. Run it
+before trusting any Tier 2 number.
 
 ## Tier 3 descoped
 
