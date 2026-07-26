@@ -29,10 +29,7 @@ This repo uses 16 subreddits across 3 windows (2018, 2019, post = Jan–Apr 2020
 committed.
 
 ```sh
-# get the file list, then fetch the subset used here
-curl -s "https://zenodo.org/api/records/3941387" > record.json   # see 01_audit.R header
-mkdir -p data out
-# download the {subreddit}_{window}_features_tfidf_256.csv files listed in urls.txt
+Rscript 00_download.R    # 47 files, ~1.2 GB, skips what you already have
 ```
 
 Each CSV carries `subreddit, author, date, post` plus ~346 precomputed feature columns.
@@ -41,14 +38,18 @@ Each CSV carries `subreddit, author, date, post` plus ~346 precomputed feature c
 unambiguous first-person singular pronouns it reads 0, and its corpus mean is 0.47 per
 post against a median post length of 140 words. Whatever it counts, it is not first-person
 singular pronoun use. All pronoun measures here are computed from raw text and validated
-against the dataset's own tokenizer (`n_words`, agreement r = .9994).
+against the dataset's own tokenizer (`n_words`, agreement r = .9995).
 
 ## Run
 
 ```sh
+Rscript 00_download.R   # ~1.2 GB from Zenodo
 Rscript 01_audit.R      # go/no-go: confirms post/author/date columns exist
+Rscript test_lexicons.R # 41 dictionary assertions
 Rscript 02_features.R   # text -> out/features.rds  (the one expensive pass, ~3 min)
-Rscript 03_tier1.R      # results + figure
+Rscript 03_tier1.R      # Tier 1 results + figure
+Rscript 04_tier2.R      # Tier 2 results
+quarto render report.qmd
 ```
 
 R 4.5, `data.table`, `stringi`, `ggplot2`. No other dependencies.
@@ -140,9 +141,9 @@ low end is dropping r/anxiety — which takes the effect just *below* the prereg
 of 0.10. No single community reverses the sign, but one of six can push it under the
 threshold I set in advance, and that belongs in the summary rather than a footnote.
 
-### Three caveats that matter more than the point estimate
+### Caveats that matter more than the point estimate
 
-**It is asymmetric.** The ought effect (*d* = −0.033) is below the preregistered SESOI of
+**It is asymmetric.** The ought effect (*d* = −0.034) is below the preregistered SESOI of
 0.10. It points the way Higgins predicts but cannot stand alone — the crossover is carried
 by the ideal marker. That is weaker than a true double dissociation and is reported as such.
 
@@ -202,9 +203,17 @@ committed; only aggregate results are published.
 ## Files
 
 ```
+00_download.R   fetch the 47 CSVs this project uses
 01_audit.R      go/no-go on the data release
+lexicons.R      all regex patterns, shared by the pipeline and the tests
+test_lexicons.R 41 assertions — run before trusting any Tier 2 number
 02_features.R   text -> per-post features (the only pass over raw text)
 03_tier1.R      Tier 1 estimation, robustness, figure
-PREREG.md       Tier 2 hypotheses — goes to OSF before Tier 2 runs
+04_tier2.R      Tier 2 double dissociation + community-level permutation test
+05_validate.R   generates the hand-coding sample; --score computes precision
+PREREG.md       Tier 2 hypotheses, committed before 04_tier2.R existed
+VALIDATION.md   dictionary error classes found and fixed
+TALK.md         the five-minute verbal version
+report.qmd      the reproducible write-up
 out/            results CSV + figure (committed); features.rds (not)
 ```
