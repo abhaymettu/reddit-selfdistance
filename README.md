@@ -117,7 +117,7 @@ and entered as a covariate.
 
 | Marker | *d* (+ = higher in dejection) | OR for ≥1 occurrence |
 |---|---|---|
-| ought (self-directed obligation) | **−0.033** | 0.92 |
+| ought (self-directed obligation) | **−0.034** | 0.91 |
 | ideal (counterfactual / unmet aspiration) | **+0.153** | 1.82 |
 | self-criticism (FSCRS-seeded) | **+0.156** | 2.39 |
 
@@ -127,14 +127,18 @@ stacked model would create. Higgins predicts delta is higher in the dejection fa
 
 | Window | *d* for delta | 95% CI |
 |---|---|---|
-| 2019 (primary) | **0.133** | [0.162, 0.209] |
-| 2018 (held out) | 0.129 | [0.152, 0.210] |
-| 2020 (held out) | 0.120 | [0.145, 0.188] |
+| 2019 (primary) | **0.134** | [0.163, 0.211] |
+| 2018 (held out) | 0.130 | [0.153, 0.211] |
+| 2020 (held out) | 0.123 | [0.149, 0.192] |
 
 Direction holds in all three windows. The preregistered falsification condition — both
 markers moving the same direction, i.e. generic distress rather than self-discrepancy
-structure — **did not occur**. Robust to removing the 4.1% of authors in both families,
-and leave-one-subreddit-out keeps delta in [0.100, 0.180].
+structure — **did not occur**. Robust to removing the 4.1% of authors in both families.
+
+**But it leans on r/anxiety.** Leave-one-subreddit-out puts delta in [0.090, 0.168], and the
+low end is dropping r/anxiety — which takes the effect just *below* the preregistered SESOI
+of 0.10. No single community reverses the sign, but one of six can push it under the
+threshold I set in advance, and that belongs in the summary rather than a footnote.
 
 ### Three caveats that matter more than the point estimate
 
@@ -149,23 +153,27 @@ communities*. Treating each community as one observation, the exact permutation 
 
 | Family | Subreddit | mean delta |
 |---|---|---|
-| agitation | healthanxiety | −0.066 |
-| agitation | socialanxiety | −0.101 |
-| agitation | anxiety | −0.168 |
-| dejection | lonely | +0.162 |
-| dejection | suicidewatch | +0.092 |
-| dejection | depression | +0.030 |
+| agitation | healthanxiety | −0.064 |
+| agitation | socialanxiety | −0.088 |
+| agitation | anxiety | −0.157 |
+| dejection | lonely | +0.173 |
+| dejection | suicidewatch | +0.082 |
+| dejection | depression | +0.028 |
 
 As strong as six communities can make it, which is not very strong.
 
-**A correction went against the finding and it survived.** Hand-coding the validation
-sample showed `had to` was catching past-tense external necessity ("i had to call the
-cops", "i had to be rushed to the e.r.") rather than an internalised self-guide. It was in
-an early lexicon draft but *not* in the preregistered pattern; removing it restored the
-prereg definition and weakened the result (delta *d* 0.144 → 0.133). Direction and
-cross-window stability were unchanged.
+**Corrections went against the finding and it survived.** Hand-coding the validation sample
+(`VALIDATION.md`) found four systematic error classes in the ought dictionary and fixed
+three: `had to` catching past-tense external necessity ("i had to call the cops"), epistemic
+`must` ("i must be underestimating myself" is an inference, not a duty), and
+discourse-purpose statements ("i need to vent"). `had to` was in an early lexicon draft but
+*not* in the preregistered pattern, so removing it restored the prereg definition rather
+than tuning toward a result. Cumulative effect: delta *d* 0.144 → 0.134. Applied anyway.
 
-`test_lexicons.R` holds 36 assertions on the dictionaries — mostly that advice-giving does
+The validation coding is **provisional and machine-coded, not human-rated** — see
+`VALIDATION.md`, which is explicit about what that does and does not buy you.
+
+`test_lexicons.R` holds 41 assertions on the dictionaries — mostly that advice-giving does
 not leak into the ought measure, which is the single confound the design rests on. Run it
 before trusting any Tier 2 number.
 

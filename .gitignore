@@ -5,3 +5,5 @@ out/features.rds
 urls*.txt
 out/validation_sample.csv
 record.json
+report.html
+report_files/

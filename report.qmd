@@ -127,12 +127,17 @@ tier2[, .(test, window, n, effect = round(effect, 3),
 preregistered falsification condition — both markers moving the same direction, which
 would indicate generic distress rather than self-discrepancy structure — did not occur.
 
-### Three caveats that matter more than the point estimate
+### Four caveats that matter more than the point estimate
 
-**The dissociation is asymmetric.** The ought effect (*d* = −0.033) is below the
+**The dissociation is asymmetric.** The ought effect (*d* = −0.034) is below the
 preregistered smallest effect size of interest of 0.10. It points the way Higgins
 predicts, but it cannot stand on its own; the crossover is carried by the ideal marker.
 This is weaker than a true double dissociation and should be described that way.
+
+**It leans on one community.** Leave-one-subreddit-out puts delta in [0.090, 0.168]. The
+low end is dropping r/anxiety, which takes the effect just *below* the preregistered SESOI
+of 0.10. No single community reverses the sign, but one of six can push it under a threshold
+I fixed in advance.
 
 **The unit of analysis is six communities, not 197,106 posts.** The post-level CIs above
 are hairline-thin because *n* is large, but they describe uncertainty about *these six
@@ -143,12 +148,22 @@ agitation communities negative, all three dejection communities positive). The h
 summary is that the community-level evidence is as strong as six communities can make it,
 and that is not very strong.
 
-**A correction went against the finding and it survived.** Hand-coding the validation
-sample showed that `had to` was capturing past-tense external necessity ("i had to call
-the cops", "i had to be rushed to the e.r.") rather than an internalised self-guide. It
-was in an early draft of the lexicon but *not* in the preregistered pattern. Removing it
-restored the preregistered definition and weakened the result (delta *d* 0.144 → 0.133);
-the direction and cross-window stability were unchanged.
+**Corrections went against the finding and it survived.** Hand-coding the validation
+sample (`VALIDATION.md`) found four systematic error classes in the ought dictionary and
+fixed three: past-tense external necessity (`had to` — "i had to call the cops", "i had to
+be rushed to the e.r."), epistemic `must` ("i must be underestimating myself" is an
+inference, not an obligation), and discourse-purpose statements ("i need to vent", which
+announces a speech act rather than a standard the writer is failing). `had to` was in an
+early lexicon draft but *not* in the preregistered pattern, so removing it restored the
+prereg definition rather than tuning toward a result. Each correction weakened the effect
+and was applied anyway; direction and cross-window stability were unchanged.
+
+The fourth class — quotation and reported speech — is a known unfixed ceiling at roughly
+1 in 50 flagged posts, with no reason to expect it to differ between families.
+
+The validation coding is **provisional and machine-coded, not human-rated.**
+`VALIDATION.md` is explicit about that, and `out/validation_sample.csv` is generated with a
+fixed seed and a blank label column, ready for a human coder.
 
 ## Tier 3 — descoped, not deferred
 
@@ -185,6 +200,9 @@ Written with the same care as the results, because with this data they are the r
   who do not post, in ways that plausibly correlate with how they write about themselves.
 - **The time windows are not a balanced panel**, and the 2020 window overlaps the onset of
   COVID-19, which changed both who posted and what they posted about.
+- **The validation coding is provisional and machine-coded**, not human-rated. See
+  `VALIDATION.md`. Quotation and reported speech remain an unfixed error source at roughly
+  1 in 50 flagged posts.
 - **Ethics.** Data is public domain, but no post text or usernames are committed to the
   repository; the validation sample containing raw text is gitignored, and only aggregate
   results are published.
@@ -193,7 +211,7 @@ Written with the same care as the results, because with this data they are the r
 
 ```sh
 Rscript 01_audit.R        # go/no-go on the data release
-Rscript test_lexicons.R   # 36 assertions on the dictionaries — run before trusting Tier 2
+Rscript test_lexicons.R   # 41 assertions on the dictionaries — run before trusting Tier 2
 Rscript 02_features.R     # text -> out/features.rds  (the only pass over raw text)
 Rscript 03_tier1.R
 Rscript 04_tier2.R

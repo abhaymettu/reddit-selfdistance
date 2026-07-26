@@ -28,9 +28,17 @@ OUGHT <- paste0("\\bi ", HEDGE, "(?:should|ought to|have to|need to|must|gotta)\
 
 # Fillers: syntactically identical to OUGHT, semantically empty. "i have to say this is
 # bad" is a discourse marker, not an obligation the writer feels bound by.
+# Two classes found by hand-coding the validation sample, both added here:
+#  - discourse-purpose statements ("i need to vent", "i need to rant"). These announce the
+#    speech act rather than express a standard the writer is failing to meet. Same logic as
+#    "i have to say", which was already excluded.
+#  - EPISTEMIC "must" ("i must be underestimating myself", "i must have missed it"), which
+#    is an inference, not an obligation. Deontic "must" ("i must stop") is kept.
 OUGHT_FILLER <- paste0("\\bi ", HEDGE,
   "(?:should |have to |need to |must )",
-  "(?:mention|say|admit|note|ask|add|point out|clarify|confess|tell you|know)\\b")
+  "(?:mention|say|admit|note|ask|add|point out|clarify|confess|tell you|know",
+  "|vent|rant|get this off|preface)\\b",
+  "|\\bi ", HEDGE, "must (?:be|have been|have|not be)\\b")
 
 # ADVICE MODALS: the confound, measured directly so it can be controlled rather than
 # hoped away.

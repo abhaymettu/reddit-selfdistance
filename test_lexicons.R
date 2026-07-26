@@ -54,6 +54,22 @@ for (s in c("I have to say this is rough.", "I should mention I am on medication
   if (o - f != 0) { bad <- bad + 1L
     cat(sprintf("FAIL [filler] net %d (ought %d filler %d): %s\n", o - f, o, f, s)) }
 }
+for (s in c("I need to vent about my week.", "I need to rant for a second.",
+            "I must be underestimating myself.", "I must have missed the appointment.")) {
+  o <- stri_count_regex(normalise(s), OUGHT)
+  f <- stri_count_regex(normalise(s), OUGHT_FILLER)
+  n <- n + 1L
+  if (o - f != 0) { bad <- bad + 1L
+    cat(sprintf("FAIL [filler2] net %d (ought %d filler %d): %s\n", o - f, o, f, s)) }
+}
+# Deontic "must" is a real ought and must survive the epistemic exclusion.
+{
+  s <- "I must stop doing this to myself."
+  net <- stri_count_regex(normalise(s), OUGHT) - stri_count_regex(normalise(s), OUGHT_FILLER)
+  n <- n + 1L
+  if (net != 1) { bad <- bad + 1L
+    cat(sprintf("FAIL [deontic-must] net %d, expected 1: %s\n", net, s)) }
+}
 # ...but a filler must not cancel a real obligation elsewhere in the same post.
 {
   s <- "I have to say this is rough. I should quit my job."
