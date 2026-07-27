@@ -1,78 +1,152 @@
 # Dictionary validation
 
-`PREREG.md` requires precision/recall against hand-coded posts before Tier 2 results are
-reported, and requires H2a be downgraded to exploratory if ought precision falls below .70.
+`PREREG.md` requires precision and recall against hand-coded posts before Tier 2 results
+are reported, and requires H2a be downgraded to exploratory if ought precision falls
+below .70.
 
-## Status: provisional, automated coding, not independent human rating
+**That gate fired. H2a is exploratory.**
 
-**The precision figures below come from automated adjudication, not from an independent
-human rater.** That is not what the preregistration asked for and it is not a substitute.
-They are reported as provisional so the measurement error is visible now rather than after
-the writeup, and so the error classes they exposed could be fixed before the analysis was
-finalised.
+## Result, 200 items hand-coded by the author, 2026-07-27
 
-Treat every figure here as an **upper bound**: the dictionary was assessed by the same
-process that built it, so the two share their blind spots. Independent coding will almost
-certainly return lower numbers.
+| Marker | Precision | 95% CI | Recall vs hard negatives | Prereg gate |
+|---|---|---|---|---|
+| ought (self-directed obligation) | **0.52** | [0.374, 0.663] | 0.63 | **FAIL** |
+| self-criticism (FSCRS-seeded) | **0.94** | [0.835, 0.987] | 0.66 | pass |
 
-`out/validation_sample.csv` is generated with a blank `true_label` column and a fixed seed,
-ready for human coding. `Rscript 05_validate.R --score` computes the real numbers once it
-is filled in, and those numbers should replace the ones below.
+Reproduce with `Rscript 05_validate.R --score`.
 
-## Provisional precision (flagged posts, 2019 + held-out windows pooled)
+The ought failure is not marginal. The entire confidence interval sits below the .70
+threshold, so this is not a case where a larger sample might rescue it.
 
-| Marker | Coded | Provisional precision |
-|---|---|---|
-| ought (self-directed obligation) | 24 | ~0.79 |
-| self-criticism (FSCRS-seeded) | 18 | ~0.94 |
+## What the split means
 
-Both clear the .70 prereg threshold, so H2a stands as confirmatory pending human coding.
+The two dictionaries were built the same way, validated by the same coder on the same
+afternoon, against the same corpus. One works and one does not, and the reason is in
+what they are made of.
+
+**Self-criticism runs on content words.** "failure", "worthless", "pathetic", "hate
+myself". These are close to unambiguous: a person who writes them is nearly always
+evaluating themselves. Precision 0.94.
+
+**Ought runs on function words.** "have to", "need to", "should", "must", "gotta". English
+modals of necessity are massively polysemous. The same surface form covers an internalised
+standard, a logistical errand, a question, advice to someone else, and epistemic
+inference, and regex cannot separate them.
+
+Of the 50 flagged ought items, 24 were judged non-instances. The dominant class was
+**practical necessity**, not internalised obligation:
+
+> "i need to clear that with my wife" · "it's just medicine i have to take everyday" ·
+> "now i have to correct them in person" · "do whatever i need to do to get ready" ·
+> "i have to start the conversation" · "whenever i have to sit at the table"
+
+Higgins' ought self is a standard about *who you should be*. "I have to take my medicine"
+is a Tuesday. The dictionary cannot tell those apart, so what it actually measures is
+closer to a to-do list than a self-guide.
+
+The generalisable claim: **lexical markers survive validation for content words and
+collapse for modal verbs.** Any operationalisation of an internalised standard via modals
+of necessity should be validated before use, not after.
+
+## Coding standard, and where it drifted
+
+The written instruction was "an obligation or requirement they feel bound by, about
+themselves." In practice the author applied a stricter, more construct-faithful reading,
+rejecting logistical necessities that the literal instruction arguably admits.
+
+This is disclosed rather than corrected, for two reasons. The stricter reading is the one
+that matches the construct Tier 2 is testing, so it is the more informative number. And
+re-coding after seeing the result would destroy the independence that makes the number
+worth anything.
+
+Two further procedural notes, recorded for completeness:
+
+- One batch of 20 self-criticism items was re-shown after a data-entry error. The author
+  reports their judgments were unchanged.
+- The coding rule was clarified partway through the self-criticism set: for "i feel X",
+  the code depends on whether X is an emotion (hopeless, numb, tired → 0) or a
+  characterisation of the person (failure, burden, broken → 1). Hedging with "i feel like"
+  does not change the code, since the FSCRS items this lexicon is seeded from are written
+  in exactly that hedged form. A small number of earlier calls predate the clarification.
+
+## The LLM pass, and why it was not enough
+
+Before the author coded, the same 200 items were coded by an LLM into a separate
+`machine_label` column. That column is retained. It was never allowed to stand in for the
+human rating, because the LLM was the same system that wrote the dictionary being tested.
+
+Comparing the two is the interesting part:
+
+| Marker | Human precision | LLM precision | Human 1s | LLM 1s | Cohen's kappa |
+|---|---|---|---|---|---|
+| ought | 0.52 | 0.80 | 41/100 | 58/100 | 0.242 |
+| self-criticism | 0.94 | 0.86 | 71/100 | 60/100 | 0.585 |
+
+The LLM was wrong **in opposite directions on the two markers**. It over-called ought,
+inflating precision from 0.52 to 0.80 and turning a decisive gate failure into a
+comfortable pass. It under-called self-criticism, deflating 0.94 to 0.86.
+
+So LLM annotation error here is not a constant bias that could be corrected with an
+offset. It is construct-dependent, and it was largest precisely where the construct was
+hardest and the validation mattered most. Had the LLM numbers been accepted, H2a would
+have been reported as confirmatory on a measure with 0.52 precision.
+
+`Rscript 05_validate.R --score --col machine_label` reproduces the LLM figures.
 
 ## Error classes found, and what was done about them
 
-Hand-coding was worth doing: it found four systematic errors, three of which were fixed.
+Coding found four systematic errors, three of which were fixed before the final run.
 
 **1. Past-tense external necessity, FIXED.** `had to` was capturing narration of
-circumstance ("i had to call the cops on her", "i had to be rushed to the e.r."), not an
-internalised self-guide. It was in an early lexicon draft but *not* in the preregistered
-pattern, so removing it restored the prereg definition. This weakened the headline result
-and was applied anyway. Cumulatively, the three fixes moved delta *d* from 0.144 to 0.134.
+circumstance ("i had to call the cops on her"), not an internalised self-guide. It was in
+an early lexicon draft but *not* in the preregistered pattern, so removing it restored the
+prereg definition. This weakened the headline result and was applied anyway. Cumulatively
+the three fixes moved delta *d* from 0.144 to 0.134.
 
-**2. Epistemic `must`, FIXED.** "i must be underestimating myself" is an inference, not
-an obligation. Now excluded via `i must (be|have been|have|not be)`, while deontic "i must
+**2. Epistemic `must`, FIXED.** "i must be underestimating myself" is an inference, not an
+obligation. Now excluded via `i must (be|have been|have|not be)`, while deontic "i must
 stop" is kept. Covered by a test.
 
 **3. Discourse-purpose statements, FIXED.** "i need to vent", "i need to rant" announce a
 speech act rather than express a standard the writer is failing to meet, the same logic
 that already excluded "i have to say". Added to the filler list.
 
-**4. Quotation and reported speech, NOT FIXED, known ceiling.** One flagged post was
-quoting someone else's shopping list ("i gotta write it down"). Detecting quotation
-reliably needs more than regex. Rate is low (~1 in 50) and there is no reason to expect it
-to differ between families, so it should add noise rather than bias.
+**4. Quotation and reported speech, NOT FIXED, known ceiling.** Detecting quotation
+reliably needs more than regex. Rate is low and there is no reason to expect it to differ
+between families, so it should add noise rather than bias.
 
-## One error class that biases *against* the finding
+Note that these fixes addressed *identifiable* error classes. The 0.52 precision shows the
+residual problem is not a list of patches but the choice of surface form itself.
+
+## One error class that biases against the finding
 
 In r/healthanxiety, "something wrong with me" is often meant medically ("i wonder if
 there's something wrong with me and why i feel like i'm dying") rather than as
-self-evaluation. That inflates self-criticism in the agitation family. Since the result is
-that self-criticism is *higher in the dejection family*, this false positive works against
-H2b, making the reported effect conservative rather than inflated.
+self-evaluation. That inflates self-criticism in the agitation family. Since H2b claims
+self-criticism is *higher in the dejection family*, this false positive works against the
+result, making it conservative rather than inflated.
 
-## What a human coder should do
+## Recall
 
-1. **Run `Rscript 05_validate.R` first.** The sample is gitignored (it contains raw post
-   text), so it will not exist in a fresh clone, and more importantly, a sample left over
-   from an earlier run may have been generated by an *older* version of the lexicon. Coding
-   a stale sample would produce precision figures for a dictionary that is no longer in use.
-   The seed is fixed, so regenerating is reproducible.
-2. Open `out/validation_sample.csv` and fill `true_label` with 1/0 using the instructions
-   `05_validate.R` prints.
-3. Run `Rscript 05_validate.R --score`.
-4. Replace this file's numbers with the real ones, and if ought precision < .70, mark H2a
-   exploratory in `README.md` and `report.qmd` as the prereg requires.
+Recall against hard negatives is 0.63 and 0.66, so roughly a third of genuine cases
+carrying the surface form are missed. Hard negatives are posts containing the surface form
+that the dictionary did not count; posts with no surface form at all are excluded because
+they are trivially correct and would inflate any agreement statistic.
 
-The sample is stratified: 50 flagged and 50 hard negatives per marker. Hard negatives are
-posts containing the surface form that the dictionary did *not* count, usually
-second-person subjects or fillers. Unflagged posts with no modal at all are excluded
-because they are trivially correct and would inflate any agreement statistic.
+This is a sensitivity limit rather than a validity problem for the between-family
+contrast, since there is no reason for the miss rate to differ between families. It does
+mean the absolute rates must not be read as prevalence.
+
+## Reproducing the validation from scratch
+
+1. `Rscript 05_validate.R` regenerates the stratified sample with a fixed seed. Do this
+   first: a sample left over from an earlier run may have come from an older lexicon, and
+   coding it would produce precision figures for a dictionary no longer in use.
+2. Code `true_label` in `out/validation_sample.csv`, either in a spreadsheet or with
+   `python3 code_sample.py`, which shows one item at a time and saves after every answer.
+   **Ignore `flagged` and `machine_label` while coding.**
+3. `Rscript 05_validate.R --score`.
+
+`--score` no longer regenerates the sample. It used to fall through the generation code
+before scoring, which overwrote the file and silently destroyed the coding it was about to
+score.

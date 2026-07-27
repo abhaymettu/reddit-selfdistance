@@ -123,9 +123,22 @@ tier2[, .(test, window, n, effect = round(effect, 3),
           ci = sprintf("[%.3f, %.3f]", lo, hi))]
 ```
 
-**H2a holds in the preregistered direction and is stable across all three windows.** The
-preregistered falsification condition, both markers moving the same direction, which
-would indicate generic distress rather than self-discrepancy structure, did not occur.
+::: {.callout-important}
+## H2a is exploratory, not confirmatory
+
+`PREREG.md` required H2a be downgraded to exploratory if the ought dictionary scored below
+.70 precision against hand-coded posts. On 200 items hand-coded blind by the author, it
+scored **0.52**, 95% CI [0.374, 0.663]. The entire interval is below the threshold.
+
+Everything in this section that depends on the ought marker is descriptive only. H2b,
+which rests on the self-criticism dictionary (precision **0.94**), is unaffected.
+:::
+
+**H2a holds in the preregistered direction and is stable across all three windows**, but
+on an unvalidated measure, so the direction is a description of the data rather than
+evidence for Higgins. The preregistered falsification condition, both markers moving the
+same direction, which would indicate generic distress rather than self-discrepancy
+structure, did not occur.
 
 ### Four caveats that matter more than the point estimate
 
@@ -161,9 +174,26 @@ and was applied anyway; direction and cross-window stability were unchanged.
 The fourth class, quotation and reported speech, is a known unfixed ceiling at roughly
 1 in 50 flagged posts, with no reason to expect it to differ between families.
 
-The validation coding is **provisional: automated, not independently human-rated.**
-`VALIDATION.md` is explicit about that, and `out/validation_sample.csv` is generated with a
-fixed seed and a blank label column, ready for a human coder.
+**But patching error classes was not enough, and that is the real result.** All 200
+validation items were subsequently hand-coded blind by the author. Self-criticism scored
+precision 0.94; ought scored **0.52**. The three fixes above removed identifiable error
+*classes*, but the residual problem is not a list of patches, it is the surface form.
+
+Self-criticism is built from content words ("failure", "worthless") which mean one thing.
+Ought is built from modal verbs ("have to", "need to", "should") which in English cover an
+internalised standard, a logistical errand, a question, advice, and epistemic inference
+alike. Of 50 flagged ought items, 24 were non-instances, mostly errands: *"it's just
+medicine i have to take everyday"*, *"i have to start the conversation"*, *"i need to clear
+that with my wife"*.
+
+The generalisable claim: **lexical markers survive validation for content words and
+collapse for modal verbs.** An internalised standard operationalised through modals of
+necessity is measuring a to-do list in roughly half of cases. See `VALIDATION.md`.
+
+A prior LLM pass over the same 200 items reported ought precision at 0.80, which would
+have cleared the gate. It over-called ought and under-called self-criticism, so the error
+was construct-dependent rather than a correctable constant bias. Accepting it would have
+produced a confirmatory H2a resting on a measure with 0.52 precision.
 
 ## Tier 3, reduced, and one artefact worth the whole section
 
@@ -218,9 +248,18 @@ Written with the same care as the results, because with this data they are the r
   who do not post, in ways that plausibly correlate with how they write about themselves.
 - **The time windows are not a balanced panel**, and the 2020 window overlaps the onset of
   COVID-19, which changed both who posted and what they posted about.
-- **The validation coding is provisional and automated**, not independently human-rated. See
-  `VALIDATION.md`. Quotation and reported speech remain an unfixed error source at roughly
-  1 in 50 flagged posts.
+- **The ought dictionary failed validation** at 0.52 precision, so H2a is exploratory. The
+  self-criticism dictionary passed at 0.94. See `VALIDATION.md`. Quotation and reported
+  speech remain an unfixed error source in both.
+- **The validation had one coder.** Precision here is measured against a single rater with
+  no second human, so there is no inter-rater reliability estimate for the human coding
+  itself. The coder was also the author, which is standard for a project this size but
+  means the standard applied was not independently set. Kappa against the LLM pass (0.242
+  ought, 0.585 self-criticism) measures disagreement, not correctness.
+- **The coding rule was clarified partway through** the self-criticism set, and the
+  applied standard for ought was stricter than the written instruction. Both are documented
+  in `VALIDATION.md` rather than corrected, since re-coding after seeing results would
+  destroy the blinding.
 - **Ethics.** Data is public domain, but no post text or usernames are committed to the
   repository; the validation sample containing raw text is gitignored, and only aggregate
   results are published.

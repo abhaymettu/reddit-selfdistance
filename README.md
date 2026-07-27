@@ -5,18 +5,39 @@ does the **ought**-self signal behave differently from the **ideal**-self signal
 
 Higgins' self-discrepancy theory predicts that ought-discrepancy produces anxiety and
 ideal-discrepancy produces dejection. If those map onto separable linguistic signatures,
-that is testable at scale. As far as I can find, nobody has tested it cleanly. That is the
-target. Tier 1 is the replication groundwork that has to hold up first.
+that is testable at scale. That was the target.
+
+**The main result is about measurement, not about Higgins.**
+
+A preregistered validation, 200 posts hand-coded blind, found that the self-criticism
+dictionary works (precision 0.94) and the ought dictionary does not (precision 0.52, 95%
+CI [0.374, 0.663]). The gate written into `PREREG.md` before any of this was run required
+H2a be downgraded to exploratory if ought precision fell below .70. It did, so it was.
+
+The reason is not sloppiness, it is the choice of surface form. Self-criticism runs on
+content words ("failure", "worthless") which mean one thing. Ought runs on modal verbs
+("have to", "need to", "should") which mean five things, and roughly half the flagged
+items turned out to be errands rather than internalised standards: *"it's just medicine i
+have to take everyday"*, *"i have to start the conversation"*.
+
+So the finding worth taking away is that **lexical markers survive validation for content
+words and collapse for modal verbs.** Anyone operationalising an internalised standard
+through modals of necessity is partly measuring a to-do list. Details in
+[`VALIDATION.md`](VALIDATION.md).
 
 ## Status
 
 | Tier | What | State |
 |---|---|---|
 | 0 | Data audit, go or no-go | done |
-| 1 | I-talk vs depression grouping | done, see Findings |
-| 2 | Ought vs ideal double dissociation | done, supported, with caveats |
-| 3 | Within-person over time | done in reduced form |
-| 4 | Limitations | below, and in `report.qmd` |
+| 1 | I-talk vs depression grouping | done, effect largely a register confound |
+| 2 | Ought vs ideal double dissociation | **H2a exploratory** (measure failed validation); H2b stands |
+| 3 | Within-person over time | done, effect was an arithmetic artifact |
+| 4 | Dictionary validation | done, 200 items hand-coded, see `VALIDATION.md` |
+
+Nothing here came out the way it was meant to, and each tier says why in a form someone
+else can check. The preregistration, the validation gate, and the leave-one-out sensitivity
+checks were all written before the results existed, and all three cost something.
 
 ## Data
 
@@ -103,6 +124,13 @@ I have a DAIC-WOZ request out (PHQ-8 scored interview transcripts) for the sever
 
 ## Findings (Tier 2)
 
+> **H2a is EXPLORATORY, not confirmatory.** `PREREG.md` required that downgrade if the
+> ought dictionary scored below .70 precision against hand-coded posts. It scored **0.52**,
+> with the whole 95% CI below the threshold. Every ought-based number in this section is
+> therefore descriptive only, and the ought marker should be read as an unvalidated
+> measure. H2b, which rests on the self-criticism dictionary, validated at **0.94** and
+> stands. See [`VALIDATION.md`](VALIDATION.md).
+
 Hypotheses are in `PREREG.md`, committed to git before `04_tier2.R` existed. The ordering
 is verifiable in the history, not just asserted.
 
@@ -145,6 +173,14 @@ advance. That belongs in the summary, not a footnote.
 
 ### Caveats that matter more than the point estimate
 
+**The ought marker did not validate.** Precision 0.52. This supersedes everything below:
+the ought column is not a measure of self-directed obligation, so the "dissociation" is at
+best a claim about one validated marker and one broken one. A double dissociation needs
+both arms to be real measures.
+
+Read in that light, the asymmetry below stops being a caveat and becomes the tell. The
+ought arm was always the weak one, and validation explains why.
+
 **It is asymmetric.** The ought effect (*d* = −0.034) is below the preregistered SESOI of
 0.10. It points the way Higgins predicts but cannot stand alone. The crossover is carried by
 the ideal marker. That is weaker than a true double dissociation and I report it as such.
@@ -175,8 +211,9 @@ not in the preregistered pattern, so removing it restored the prereg definition 
 tuning toward a result. Cumulatively the fixes moved delta *d* from 0.144 to 0.134. Applied
 anyway.
 
-The validation coding is provisional: automated, not independently human-rated. See
-`VALIDATION.md`, which is explicit about what that does and does not buy you.
+Patching error classes was not enough. All 200 validation items were then hand-coded blind:
+self-criticism precision 0.94, ought precision 0.52. The residual problem is not a list of
+patches, it is the surface form. See `VALIDATION.md`.
 
 `test_lexicons.R` holds 41 assertions on the dictionaries, mostly that advice-giving does
 not leak into the ought measure, which is the single confound this design rests on. Run it
