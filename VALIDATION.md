@@ -4,7 +4,7 @@
 are reported, and requires H2a be downgraded to exploratory if ought precision falls
 below .70.
 
-**That gate fired. H2a is exploratory.**
+That threshold was not met. H2a is reported as exploratory.
 
 ## Result, 200 items hand-coded by the author, 2026-07-27
 
@@ -24,29 +24,29 @@ The two dictionaries were built the same way, validated by the same coder on the
 afternoon, against the same corpus. One works and one does not, and the reason is in
 what they are made of.
 
-**Self-criticism runs on content words.** "failure", "worthless", "pathetic", "hate
+Self-criticism is built from content words: "failure", "worthless", "pathetic", "hate
 myself". These are close to unambiguous: a person who writes them is nearly always
 evaluating themselves. Precision 0.94.
 
-**Ought runs on function words.** "have to", "need to", "should", "must", "gotta". English
+Ought is built from function words: "have to", "need to", "should", "must", "gotta". English
 modals of necessity are massively polysemous. The same surface form covers an internalised
 standard, a logistical errand, a question, advice to someone else, and epistemic
 inference, and regex cannot separate them.
 
 Of the 50 flagged ought items, 24 were judged non-instances. The dominant class was
-**practical necessity**, not internalised obligation:
+practical necessity rather than internalised obligation:
 
 > "i need to clear that with my wife" · "it's just medicine i have to take everyday" ·
 > "now i have to correct them in person" · "do whatever i need to do to get ready" ·
 > "i have to start the conversation" · "whenever i have to sit at the table"
 
-Higgins' ought self is a standard about *who you should be*. "I have to take my medicine"
-is a Tuesday. The dictionary cannot tell those apart, so what it actually measures is
-closer to a to-do list than a self-guide.
+Higgins' ought self is a standard about who a person believes they should be. "I have to
+take my medicine" is a scheduling fact. The dictionary does not distinguish the two, so
+what it measures is closer to a record of tasks than a self-guide.
 
-The generalisable claim: **lexical markers survive validation for content words and
-collapse for modal verbs.** Any operationalisation of an internalised standard via modals
-of necessity should be validated before use, not after.
+The generalisable point is that lexical markers survive validation for content words and
+fail for modal verbs. Any operationalisation of an internalised standard through modals of
+necessity should be validated before use rather than after.
 
 ## Coding standard, and where it drifted
 
@@ -75,16 +75,16 @@ Before the author coded, the same 200 items were coded by an LLM into a separate
 `machine_label` column. That column is retained. It was never allowed to stand in for the
 human rating, because the LLM was the same system that wrote the dictionary being tested.
 
-Comparing the two is the interesting part:
+Comparing the two:
 
 | Marker | Human precision | LLM precision | Human 1s | LLM 1s | Cohen's kappa |
 |---|---|---|---|---|---|
 | ought | 0.52 | 0.80 | 41/100 | 58/100 | 0.242 |
 | self-criticism | 0.94 | 0.86 | 71/100 | 60/100 | 0.585 |
 
-The LLM was wrong **in opposite directions on the two markers**. It over-called ought,
-inflating precision from 0.52 to 0.80 and turning a decisive gate failure into a
-comfortable pass. It under-called self-criticism, deflating 0.94 to 0.86.
+The LLM erred in opposite directions on the two markers. It over-called ought, raising
+apparent precision from 0.52 to 0.80 and converting a clear threshold failure into a pass.
+It under-called self-criticism, lowering 0.94 to 0.86.
 
 So LLM annotation error here is not a constant bias that could be corrected with an
 offset. It is construct-dependent, and it was largest precisely where the construct was
@@ -97,21 +97,21 @@ have been reported as confirmatory on a measure with 0.52 precision.
 
 Coding found four systematic errors, three of which were fixed before the final run.
 
-**1. Past-tense external necessity, FIXED.** `had to` was capturing narration of
+1. Past-tense external necessity, fixed. `had to` was capturing narration of
 circumstance ("i had to call the cops on her"), not an internalised self-guide. It was in
 an early lexicon draft but *not* in the preregistered pattern, so removing it restored the
 prereg definition. This weakened the headline result and was applied anyway. Cumulatively
 the three fixes moved delta *d* from 0.144 to 0.134.
 
-**2. Epistemic `must`, FIXED.** "i must be underestimating myself" is an inference, not an
+2. Epistemic `must`, fixed. "i must be underestimating myself" is an inference, not an
 obligation. Now excluded via `i must (be|have been|have|not be)`, while deontic "i must
 stop" is kept. Covered by a test.
 
-**3. Discourse-purpose statements, FIXED.** "i need to vent", "i need to rant" announce a
+3. Discourse-purpose statements, fixed. "i need to vent", "i need to rant" announce a
 speech act rather than express a standard the writer is failing to meet, the same logic
 that already excluded "i have to say". Added to the filler list.
 
-**4. Quotation and reported speech, NOT FIXED, known ceiling.** Detecting quotation
+4. Quotation and reported speech, not fixed, a known ceiling. Detecting quotation
 reliably needs more than regex. Rate is low and there is no reason to expect it to differ
 between families, so it should add noise rather than bias.
 

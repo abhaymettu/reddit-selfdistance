@@ -7,23 +7,23 @@ Higgins' self-discrepancy theory predicts that ought-discrepancy produces anxiet
 ideal-discrepancy produces dejection. If those map onto separable linguistic signatures,
 that is testable at scale. That was the target.
 
-**The main result is about measurement, not about Higgins.**
+The main result concerns measurement rather than self-discrepancy theory.
 
 A preregistered validation, 200 posts hand-coded blind, found that the self-criticism
 dictionary works (precision 0.94) and the ought dictionary does not (precision 0.52, 95%
 CI [0.374, 0.663]). The gate written into `PREREG.md` before any of this was run required
 H2a be downgraded to exploratory if ought precision fell below .70. It did, so it was.
 
-The reason is not sloppiness, it is the choice of surface form. Self-criticism runs on
-content words ("failure", "worthless") which mean one thing. Ought runs on modal verbs
-("have to", "need to", "should") which mean five things, and roughly half the flagged
-items turned out to be errands rather than internalised standards: *"it's just medicine i
+The cause is the choice of surface form. Self-criticism is built from content words
+("failure", "worthless"), which are close to unambiguous. Ought is built from modal verbs
+("have to", "need to", "should"), which in English cover an internalised standard, an
+errand, a question, advice, and epistemic inference alike. Roughly half the flagged items
+were errands rather than internalised standards: *"it's just medicine i
 have to take everyday"*, *"i have to start the conversation"*.
 
-So the finding worth taking away is that **lexical markers survive validation for content
-words and collapse for modal verbs.** Anyone operationalising an internalised standard
-through modals of necessity is partly measuring a to-do list. Details in
-[`VALIDATION.md`](VALIDATION.md).
+The generalisable point is that lexical markers survive validation for content words and
+fail for modal verbs. An internalised standard operationalised through modals of necessity
+is partly a measure of scheduled tasks. Details in [`VALIDATION.md`](VALIDATION.md).
 
 ## Status
 
@@ -35,9 +35,10 @@ through modals of necessity is partly measuring a to-do list. Details in
 | 3 | Within-person over time | done, effect was an arithmetic artifact |
 | 4 | Dictionary validation | done, 200 items hand-coded, see `VALIDATION.md` |
 
-Nothing here came out the way it was meant to, and each tier says why in a form someone
-else can check. The preregistration, the validation gate, and the leave-one-out sensitivity
-checks were all written before the results existed, and all three cost something.
+No tier returned the result it was designed to test for. Each states why, in a form that
+can be checked against the code. The preregistration, the validation threshold, and the
+leave-one-out sensitivity checks were all fixed before the results existed, and each
+changed a conclusion.
 
 ## Data
 
@@ -78,7 +79,7 @@ R 4.5, `data.table`, `stringi`, `ggplot2`, and `lme4` for Tier 3 only.
 
 ## Findings (Tier 1)
 
-The headline is a negative methodological result, and it is the useful part.
+The result here is methodological and negative.
 
 The obvious design is depression subreddits (depression, lonely, suicidewatch) against
 non-mental-health ones (fitness, jokes, personalfinance, teaching). That gives **r = .47,
@@ -86,12 +87,12 @@ d = 1.08**. The meta-analytic I-talk effect is around r = .13. A number 3.5 time
 published effect is a red flag, not a discovery, and the preregistered `|r| > 0.3` gate in
 the script aborted on it.
 
-The gate was right, but this is not a coding bug. It is confounded genre. r/depression and
+The gate was right, and the cause is confounded genre rather than a coding error. r/depression and
 r/suicidewatch are communities whose norm is first-person confessional narrative.
 r/personalfinance and r/teaching are topic-oriented Q&A. Any first-person pronoun measure
 separates those registers whether or not anyone is depressed. Dropping r/jokes, the most
-third-person control, barely moved it, so it is not one bad control. It is the whole
-control arm.
+third-person control, barely moved it, which indicates the problem is the comparison arm
+as a whole rather than one unrepresentative community.
 
 Holding genre constant by comparing against other mental-health subreddits, where everyone
 writes first-person distress narrative and only the disorder varies:
@@ -106,7 +107,7 @@ Stable across all three windows, so it is not a window artifact. 4.9% of authors
 both arms. Removing them moves r *up* slightly, so that overlap was attenuating the
 estimate rather than inflating it.
 
-**Roughly half the naive association is register, not depression.** The residual r ≈ .22 is
+Roughly half the naive association is register rather than depression. The residual r ≈ .22 is
 still above the r ≈ .13 literature, and I expect the rest is more of the same. Even within
 mental-health subreddits, r/depression is more self-focused by topic than r/adhd. r/autism
 landing down among the topical subreddits in the figure is the same thing from the other
@@ -166,26 +167,26 @@ markers moving the same direction (which would mean generic distress rather than
 self-discrepancy structure), did not occur. Robust to removing the 4.1% of authors who
 appear in both families.
 
-**But it leans on r/anxiety.** Leave-one-subreddit-out puts delta in [0.090, 0.168], and the
+It leans on r/anxiety. Leave-one-subreddit-out puts delta in [0.090, 0.168], and the
 low end is dropping r/anxiety, which takes it just below the preregistered SESOI of 0.10. No
 single community reverses the sign, but one of six can push it under a threshold I set in
 advance. That belongs in the summary, not a footnote.
 
 ### Caveats that matter more than the point estimate
 
-**The ought marker did not validate.** Precision 0.52. This supersedes everything below:
-the ought column is not a measure of self-directed obligation, so the "dissociation" is at
-best a claim about one validated marker and one broken one. A double dissociation needs
-both arms to be real measures.
+The ought marker did not validate, at precision 0.52. This supersedes the caveats below:
+the ought column is not a measure of self-directed obligation, so the dissociation reduces
+to a claim resting on one validated marker and one unvalidated one. A double dissociation
+requires both arms to be valid measures.
 
-Read in that light, the asymmetry below stops being a caveat and becomes the tell. The
-ought arm was always the weak one, and validation explains why.
+The asymmetry described below is consistent with that. The ought arm was the weaker one
+throughout, and the validation result explains why.
 
-**It is asymmetric.** The ought effect (*d* = −0.034) is below the preregistered SESOI of
+The dissociation is asymmetric. The ought effect (*d* = −0.034) is below the preregistered SESOI of
 0.10. It points the way Higgins predicts but cannot stand alone. The crossover is carried by
 the ideal marker. That is weaker than a true double dissociation and I report it as such.
 
-**The unit of analysis is six communities, not 197,106 posts.** The post-level CIs are
+The unit of analysis is six communities rather than 197,106 posts. The post-level CIs are
 hairline thin because *n* is huge, but they describe uncertainty about *these six
 communities*. Treating each community as one observation, the exact permutation test gives
 *p* = 0.10, which is the floor for a 3 vs 3 split, hit because the rank separation is
@@ -202,7 +203,7 @@ perfect:
 
 As strong as six communities can make it, which is not very strong.
 
-**Corrections went against the finding and it survived.** Coding the validation sample
+Corrections went against the finding and it survived. Coding the validation sample
 (`VALIDATION.md`) turned up four systematic error classes in the ought dictionary. Three are
 fixed: `had to` catching past-tense external necessity ("i had to call the cops"), epistemic
 `must` ("i must be underestimating myself" is an inference, not a duty), and
@@ -211,9 +212,9 @@ not in the preregistered pattern, so removing it restored the prereg definition 
 tuning toward a result. Cumulatively the fixes moved delta *d* from 0.144 to 0.134. Applied
 anyway.
 
-Patching error classes was not enough. All 200 validation items were then hand-coded blind:
-self-criticism precision 0.94, ought precision 0.52. The residual problem is not a list of
-patches, it is the surface form. See `VALIDATION.md`.
+Patching error classes was not sufficient. All 200 validation items were then hand-coded
+blind: self-criticism precision 0.94, ought precision 0.52. The residual problem is the
+choice of surface form rather than a list of remaining patches. See `VALIDATION.md`.
 
 `test_lexicons.R` holds 41 assertions on the dictionaries, mostly that advice-giving does
 not leak into the ought measure, which is the single confound this design rests on. Run it
@@ -242,7 +243,7 @@ direction the self-distancing literature predicts.
 
 The naive lagged model flips sign and looks significant. It is arithmetic, not psychology.
 
-**91.8% of these authors have exactly two windows.** For two observations, person-mean
+91.8% of these authors have exactly two windows. For two observations, person-mean
 centring forces `x_c = (d/2, −d/2)` and `y_c = (e/2, −e/2)`. The contemporaneous pair is
 `(d/2, e/2)` and the lagged pair is `(d/2, −e/2)`, which is exactly the negative, by
 construction, for every such author. So a lagged regression on two-observation people is
@@ -256,7 +257,7 @@ Restricting the lag to authors seen in all three windows, where centring does no
 reversal, gives an interval that **crosses zero**. Even that estimate carries small-T
 dynamic panel (Nickell) bias.
 
-**So: a within-person association in the same window, and no evidence of temporal
+The result is a within-person association in the same window, with no evidence of temporal
 ordering.** The question that motivated Tier 3, whether self-distanced language shifts
 before symptom language, needs days-to-weeks resolution. This panel is annual. It cannot
 answer that, and no amount of modelling will make it.

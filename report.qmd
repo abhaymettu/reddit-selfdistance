@@ -32,7 +32,7 @@ and does the **ought**-self signal behave differently from the **ideal**-self si
 Higgins' (1987) self-discrepancy theory makes a specific prediction: discrepancy from the
 *ought* self produces agitation-related affect (anxiety), discrepancy from the *ideal*
 self produces dejection-related affect (sadness). If those two discrepancies have
-separable linguistic signatures, the prediction is testable at scale. That is the target
+separable linguistic signatures, the prediction is testable at scale. That is the question
 of Tier 2. Tier 1 is the replication groundwork that has to hold first.
 
 ## Data
@@ -41,7 +41,7 @@ Reddit Mental Health Dataset (Low et al., 2020, *JMIR* 22(10):e22635), Zenodo
 [3941387](https://zenodo.org/records/3941387), public domain. 16 subreddits × 3 time
 windows (Jan–Apr 2018, Jan–Apr 2019, Jan–Apr 2020), 478,675 posts.
 
-**There is no symptom severity measure anywhere in this dataset.** Every "depression"
+There is no symptom severity measure anywhere in this dataset. Every "depression"
 contrast below is subreddit membership, which is a crude proxy. Nothing here should be
 read as an association with clinical severity.
 
@@ -70,12 +70,13 @@ That design returns *r* ≈ .47, *d* ≈ 1.08, roughly 3.5× the meta-analytic I
 of *r* ≈ .13. The analysis script carries a preregistered `|r| > 0.30` abort gate, and it
 fired.
 
-The gate was right, but the cause is not a coding bug. It is **confounded genre**.
+The gate was right, and the cause is confounded genre rather than a coding error.
 r/depression and r/suicidewatch are communities whose norm is first-person confessional
 narrative; r/personalfinance and r/teaching are topic-oriented Q&A. Any first-person
 pronoun measure separates those two registers whether or not anyone is depressed.
-Dropping r/jokes, the most third-person control, barely moved the estimate, so it is
-not one bad control, it is the whole arm.
+Dropping r/jokes, the most third-person control, barely moved the estimate, which
+indicates the problem is the comparison arm as a whole rather than one unrepresentative
+community.
 
 ![](out/fig_1sg_by_subreddit.png)
 
@@ -84,7 +85,7 @@ first-person distress narrative and only the disorder varies, roughly halves the
 to *r* ≈ .21–.22, stable across all three windows and robust to removing the 4.9% of
 authors who post in both arms.
 
-**About half of the naive association was register, not depression.** The residual is
+About half of the naive association was register rather than depression. The residual is
 still above the literature's .13, and I would expect more of the same explanation: even
 among mental-health communities, r/depression is more self-focused-by-topic than r/adhd.
 r/autism sitting down among the topical subreddits in the figure is the same effect seen
@@ -134,7 +135,7 @@ Everything in this section that depends on the ought marker is descriptive only.
 which rests on the self-criticism dictionary (precision **0.94**), is unaffected.
 :::
 
-**H2a holds in the preregistered direction and is stable across all three windows**, but
+H2a holds in the preregistered direction and is stable across all three windows, but
 on an unvalidated measure, so the direction is a description of the data rather than
 evidence for Higgins. The preregistered falsification condition, both markers moving the
 same direction, which would indicate generic distress rather than self-discrepancy
@@ -142,26 +143,26 @@ structure, did not occur.
 
 ### Four caveats that matter more than the point estimate
 
-**The dissociation is asymmetric.** The ought effect (*d* = −0.034) is below the
+The dissociation is asymmetric. The ought effect (*d* = −0.034) is below the
 preregistered smallest effect size of interest of 0.10. It points the way Higgins
 predicts, but it cannot stand on its own; the crossover is carried by the ideal marker.
 This is weaker than a true double dissociation and should be described that way.
 
-**It leans on one community.** Leave-one-subreddit-out puts delta in [0.090, 0.168]. The
+The result leans on one community. Leave-one-subreddit-out puts delta in [0.090, 0.168]. The
 low end is dropping r/anxiety, which takes the effect just *below* the preregistered SESOI
 of 0.10. No single community reverses the sign, but one of six can push it under a threshold
 I fixed in advance.
 
-**The unit of analysis is six communities, not 197,106 posts.** The post-level CIs above
+The unit of analysis is six communities rather than 197,106 posts. The post-level CIs above
 are hairline-thin because *n* is large, but they describe uncertainty about *these six
 communities*. For the family-level claim the effective sample size is 6. Treating each
 community as one observation, the exact permutation test gives *p* = 0.10, which is the
 **floor** for a 3-vs-3 split, attained because the rank separation is perfect (all three
-agitation communities negative, all three dejection communities positive). The honest
-summary is that the community-level evidence is as strong as six communities can make it,
-and that is not very strong.
+agitation communities negative, all three dejection communities positive). The
+community-level evidence is therefore as strong as six communities permit, which is not
+strong.
 
-**Corrections went against the finding and it survived.** Hand-coding the validation
+Corrections went against the finding and it survived. Hand-coding the validation
 sample (`VALIDATION.md`) found four systematic error classes in the ought dictionary and
 fixed three: past-tense external necessity (`had to`, "i had to call the cops", "i had to
 be rushed to the e.r."), epistemic `must` ("i must be underestimating myself" is an
@@ -174,10 +175,11 @@ and was applied anyway; direction and cross-window stability were unchanged.
 The fourth class, quotation and reported speech, is a known unfixed ceiling at roughly
 1 in 50 flagged posts, with no reason to expect it to differ between families.
 
-**But patching error classes was not enough, and that is the real result.** All 200
+Patching error classes was not sufficient. All 200
 validation items were subsequently hand-coded blind by the author. Self-criticism scored
 precision 0.94; ought scored **0.52**. The three fixes above removed identifiable error
-*classes*, but the residual problem is not a list of patches, it is the surface form.
+*classes*. The residual problem is the choice of surface form rather than a list of
+remaining patches.
 
 Self-criticism is built from content words ("failure", "worthless") which mean one thing.
 Ought is built from modal verbs ("have to", "need to", "should") which in English cover an
@@ -209,7 +211,7 @@ a **year** apart. All predictors person-mean-centred, so estimates are within-pe
 Same window, more self-distanced language goes with **less** self-criticism, the direction
 the self-distancing literature predicts.
 
-**The lagged model flips sign and looks significant. It is an artefact.** 91.8% of these
+The lagged model flips sign and appears significant, but the effect is an artefact. 91.8% of these
 authors have exactly two windows, and for two observations person-mean-centring forces
 `x_c = (d/2, −d/2)` and `y_c = (e/2, −e/2)`. The contemporaneous pair is `(d/2, e/2)` and the
 lagged pair is `(d/2, −e/2)`, exactly the negative, by construction, for every such author.
