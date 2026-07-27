@@ -25,6 +25,10 @@ The generalisable point is that lexical markers survive validation for content w
 fail for modal verbs. An internalised standard operationalised through modals of necessity
 is partly a measure of scheduled tasks. Details in [`VALIDATION.md`](VALIDATION.md).
 
+Registration: [osf.io/z3uph](https://osf.io/z3uph/), registered 2026-07-27. It covers Tier
+2 only, states that it was posted after those analyses were run, and reports the validation
+result including the H2a downgrade. Tier 1 and Tier 3 are not covered by it.
+
 ## Status
 
 | Tier | What | State |

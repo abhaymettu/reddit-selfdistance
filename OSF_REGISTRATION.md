@@ -1,3 +1,6 @@
+Registered 2026-07-27 at https://osf.io/z3uph/
+This file is the source text of that registration, kept here for version history.
+
 TRANSPARENCY STATEMENT
 
 Scope. This registration covers Tier 2 of the project only.
