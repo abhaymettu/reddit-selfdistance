@@ -44,16 +44,28 @@ if ("--score" %in% commandArgs(TRUE)) {
     if (mk == "ought" && tp / (tp + fp) < 0.70)
       cat("  ** precision < .70: PREREG requires H2a be downgraded to exploratory **\n")
   }
-  # Agreement between the two codings, once the human column is filled in. This is the
-  # number that says whether the LLM pass was worth anything.
+  # Agreement between the two codings, once the human column is filled in. Reported per
+  # marker as well as pooled: the pooled figure hides that agreement differs sharply
+  # between the two dictionaries, which is the substantive result.
   if (all(c("true_label", "machine_label") %in% names(v)) &&
       !all(is.na(v$true_label)) && !all(is.na(v$machine_label))) {
+    kappa <- function(x, y) {
+      po <- mean(x == y)
+      pe <- mean(x) * mean(y) + (1 - mean(x)) * (1 - mean(y))
+      c(agree = po, kappa = (po - pe) / (1 - pe))
+    }
     b <- v[!is.na(true_label) & !is.na(machine_label)]
-    po <- mean(b$true_label == b$machine_label)
-    pe <- mean(b$true_label) * mean(b$machine_label) +
-          (1 - mean(b$true_label)) * (1 - mean(b$machine_label))
-    cat(sprintf("\nHuman vs machine on %d rows: agreement %.3f, Cohen's kappa %.3f\n",
-                nrow(b), po, (po - pe) / (1 - pe)))
+    cat("\nHuman vs machine coding:\n")
+    for (mk in unique(b$marker)) {
+      m <- b[marker == mk]
+      k <- kappa(m$true_label, m$machine_label)
+      cat(sprintf("  %-9s n=%3d  agreement %.3f  kappa %.3f   human 1s %d, machine 1s %d\n",
+                  mk, nrow(m), k[["agree"]], k[["kappa"]],
+                  sum(m$true_label == 1), sum(m$machine_label == 1)))
+    }
+    k <- kappa(b$true_label, b$machine_label)
+    cat(sprintf("  %-9s n=%3d  agreement %.3f  kappa %.3f\n",
+                "POOLED", nrow(b), k[["agree"]], k[["kappa"]]))
   }
   quit(status = 0)
 }
