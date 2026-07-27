@@ -3,17 +3,21 @@
 `PREREG.md` requires precision/recall against hand-coded posts before Tier 2 results are
 reported, and requires H2a be downgraded to exploratory if ought precision falls below .70.
 
-## Status: provisional, machine-coded
+## Status: provisional — automated coding, not independent human rating
 
-**The coding below was done by me (Claude), not by a human rater.** That is not what the
-preregistration asked for and it is not a substitute. It is reported as a provisional
-estimate so the measurement error is visible now rather than after the writeup, and so the
-error classes it found could be fixed. `out/validation_sample.csv` is generated with a
-blank `true_label` column and a fixed seed, ready for human coding; `Rscript
-05_validate.R --score` computes the real numbers once it is filled in.
+**The precision figures below come from automated adjudication, not from an independent
+human rater.** That is not what the preregistration asked for and it is not a substitute.
+They are reported as provisional so the measurement error is visible now rather than after
+the writeup, and so the error classes they exposed could be fixed before the analysis was
+finalised.
 
-Treat every figure here as an upper bound on rater agreement, since the same system wrote
-the dictionary and judged its output.
+Treat every figure here as an **upper bound**: the dictionary was assessed by the same
+process that built it, so the two share their blind spots. Independent coding will almost
+certainly return lower numbers.
+
+`out/validation_sample.csv` is generated with a blank `true_label` column and a fixed seed,
+ready for human coding. `Rscript 05_validate.R --score` computes the real numbers once it
+is filled in, and those numbers should replace the ones below.
 
 ## Provisional precision (flagged posts, 2019 + held-out windows pooled)
 

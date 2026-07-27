@@ -172,7 +172,7 @@ discourse-purpose statements ("i need to vent"). `had to` was in an early lexico
 *not* in the preregistered pattern, so removing it restored the prereg definition rather
 than tuning toward a result. Cumulative effect: delta *d* 0.144 → 0.134. Applied anyway.
 
-The validation coding is **provisional and machine-coded, not human-rated** — see
+The validation coding is **provisional: automated, not independently human-rated** — see
 `VALIDATION.md`, which is explicit about what that does and does not buy you.
 
 `test_lexicons.R` holds 41 assertions on the dictionaries — mostly that advice-giving does

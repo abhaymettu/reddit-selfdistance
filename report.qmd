@@ -161,7 +161,7 @@ and was applied anyway; direction and cross-window stability were unchanged.
 The fourth class — quotation and reported speech — is a known unfixed ceiling at roughly
 1 in 50 flagged posts, with no reason to expect it to differ between families.
 
-The validation coding is **provisional and machine-coded, not human-rated.**
+The validation coding is **provisional: automated, not independently human-rated.**
 `VALIDATION.md` is explicit about that, and `out/validation_sample.csv` is generated with a
 fixed seed and a blank label column, ready for a human coder.
 
@@ -218,7 +218,7 @@ Written with the same care as the results, because with this data they are the r
   who do not post, in ways that plausibly correlate with how they write about themselves.
 - **The time windows are not a balanced panel**, and the 2020 window overlaps the onset of
   COVID-19, which changed both who posted and what they posted about.
-- **The validation coding is provisional and machine-coded**, not human-rated. See
+- **The validation coding is provisional and automated**, not independently human-rated. See
   `VALIDATION.md`. Quotation and reported speech remain an unfixed error source at roughly
   1 in 50 flagged posts.
 - **Ethics.** Data is public domain, but no post text or usernames are committed to the
