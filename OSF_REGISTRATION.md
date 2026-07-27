@@ -1,30 +1,33 @@
 TRANSPARENCY STATEMENT
 
-Tier 1 of this project was run before this registration and is not covered by it. It is
-reported as prior work motivating the design below. Tiers 2 and 3 were specified before
-their analyses were written.
+Scope. This registration covers Tier 2 of the project only.
 
-The ordering is verifiable in the public commit history at
-https://github.com/abhaymettu/reddit-selfdistance
-PREREG.md was first committed at 2026-07-26 17:48:07 -0500 (e8a2ae6). The Tier 2 analysis
-script was first committed 27 minutes later, at 18:15:23 (c9c9667). PREREG.md was edited
-once after that; the change was cosmetic and altered no hypothesis, threshold, lexicon
-definition, or falsification criterion.
+Tier 1 was run before this registration and is not covered by it. It is reported in the
+repository as prior work motivating the design below.
 
-STATUS AT TIME OF POSTING. This registration is posted after the Tier 2 analyses were
-run, so it is not a prospective registration in the strict sense. What it does establish,
-and what the commit history above verifies, is that the hypotheses, the smallest effect
-size of interest, the leak gate, the falsification condition, and the validation threshold
-were all fixed before the analyses that they govern.
+Tier 3, a within-person panel analysis, is not covered either. It was never preregistered.
+It was run after this document was written, but that is not the same as being specified in
+advance, and none of the rules below govern it. The repository reports it as exploratory;
+its headline effect was subsequently found to be an arithmetic artifact of centring.
 
-The dictionary validation described below has since been completed. 200 items were
-hand-coded blind by the author, with the dictionary's own decisions withheld during
-coding. The ought dictionary scored precision 0.52, 95% CI [0.374, 0.663]. The
-self-criticism dictionary scored 0.94, 95% CI [0.835, 0.987].
+Tier 2 was specified before its analysis was written. The ordering is verifiable in the
+public commit history at https://github.com/abhaymettu/reddit-selfdistance. PREREG.md was
+first committed at 2026-07-26 17:48:07 -0500 (e8a2ae6) and the Tier 2 analysis script at
+18:15:23 (c9c9667). PREREG.md was edited once afterwards; that commit changed punctuation
+and a byline and altered no hypothesis, threshold, lexicon definition, or falsification
+criterion.
 
-Per the threshold written below, H2a has been downgraded to exploratory. That downgrade
-has been applied in the repository README and report. The rule was written to be capable
-of costing something, and it did.
+Timing of posting. This document is posted to OSF after the Tier 2 analyses were run, so
+it is not a prospective registration. What the commit history establishes is that the
+hypotheses, the smallest effect size of interest, the leak gate, the falsification
+condition, and the dictionary validation threshold were fixed before the analyses they
+govern.
+
+Validation status. The dictionary validation specified below has been completed. 200 items
+were hand-coded by the author, blind to the dictionary's own classifications. Ought
+precision was 0.52, 95% CI [0.374, 0.663]. Self-criticism precision was 0.94, 95% CI
+[0.835, 0.987]. Under the threshold specified below, H2a is reported as exploratory rather
+than confirmatory. That change has been applied in the repository README and report.
 
 
 PREREGISTRATION, TIER 2: OUGHT-SELF AND IDEAL-SELF LINGUISTIC SIGNATURES
@@ -141,9 +144,8 @@ to straddle it, and the sample could not then decisively resolve its own gate. T
 therefore applied to the point estimate, with the confidence interval reported alongside so
 a reader can judge how sharp the decision was.
 
-In the event this did not bite. Ought precision came in at 0.52 with a 95% confidence
-interval of [0.374, 0.663], entirely below the cutoff, so the gate failed decisively
-rather than marginally.
+In the event, ought precision was 0.52 with a 95% confidence interval of [0.374, 0.663].
+The interval lies entirely below the cutoff.
 
 
 WHAT WOULD FALSIFY H2A
