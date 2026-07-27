@@ -1,4 +1,4 @@
-# Preregistration — Tier 2: ought-self and ideal-self linguistic signatures
+# Preregistration, Tier 2: ought-self and ideal-self linguistic signatures
 
 Paste to OSF and timestamp **before** running `04_tier2.R`. Tier 1 (already run, reported
 in README) is not covered here; it is prior work that motivates the design below.
@@ -49,12 +49,12 @@ small.
 All rates are per token, using the same tokenizer for numerator and denominator
 (`02_features.R`; validated against the dataset's independent count at r = .9994).
 
-- **Ought self:** first-person modal obligation only — `i (really/just/…)? (should|ought
+- **Ought self:** first-person modal obligation only, `i (really/just/…)? (should|ought
   to|have to|need to|must|gotta)`. Second- and third-person modals are counted
   **separately** as an advice-giving covariate, not folded in. Discourse fillers excluded:
   `i should mention`, `i need to say`, `i have to admit`, `i have to say`.
 - **Ideal self:** `should have`, `could have been`, `if only`, `i wish`, `supposed to be`,
-  `wanted to be`, `used to be` — restricted to first-person contexts.
+  `wanted to be`, `used to be`, restricted to first-person contexts.
 - **Self-criticism:** seed lexicon from FSCRS inadequate-self and hated-self item content,
   restricted to first-person subjects.
 - **Self-distancing:** second-person and third-person self-reference; self-naming
@@ -92,6 +92,6 @@ downgraded to exploratory.
 
 ## What would falsify H2a
 
-Both markers moving in the *same* direction across families — that is generic distress
+Both markers moving in the *same* direction across families, that is generic distress
 severity, not self-discrepancy structure. This is the most likely outcome and it will be
 reported as such.

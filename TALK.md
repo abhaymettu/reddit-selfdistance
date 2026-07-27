@@ -1,6 +1,6 @@
 # Five minutes, out loud
 
-Notes for saying this in a meeting. Not a script — the beats, in order, with the numbers
+Notes for saying this in a meeting. Not a script, the beats, in order, with the numbers
 that matter and the honest answers to the obvious pushback.
 
 ---
@@ -8,12 +8,12 @@ that matter and the honest answers to the obvious pushback.
 ## 1. The question (30s)
 
 There is a well-known finding that depressed people use more first-person singular
-pronouns — more "I", "me", "my". The meta-analytic effect is about *r* = .13. Small but
+pronouns, more "I", "me", "my". The meta-analytic effect is about *r* = .13. Small but
 real.
 
 I wanted to test something more specific. Higgins' self-discrepancy theory says failing to
-meet your **ought** self — duties, obligations — produces *anxiety*, while failing to meet
-your **ideal** self — hopes, aspirations — produces *dejection*. That's a 40-year-old
+meet your **ought** self, duties, obligations, produces *anxiety*, while failing to meet
+your **ideal** self, hopes, aspirations, produces *dejection*. That's a 40-year-old
 prediction about two different kinds of self-failure. Nobody has tested whether those two
 show up as different linguistic signatures at scale.
 
@@ -27,9 +27,9 @@ observe depression. I observe which subreddit someone posted in. Everything I sa
 community membership, not severity. I've requested DAIC-WOZ, which has PHQ-8 scores, for
 the version of this that can use the word "severity."
 
-## 3. The finding I did not expect (90s — this is the important part)
+## 3. The finding I did not expect (90s, this is the important part)
 
-I started by replicating the pronoun effect. Depression subreddits versus ordinary ones —
+I started by replicating the pronoun effect. Depression subreddits versus ordinary ones:
 r/fitness, r/personalfinance, r/jokes, r/teaching.
 
 I got *r* = .47. Three and a half times the published effect.
@@ -42,8 +42,8 @@ norm is telling your own story in the first person. r/personalfinance is people 
 questions about their 401k. Counting "I" separates confessional writing from topical
 writing, and it does that whether or not anybody is depressed.
 
-So I changed the comparison group to *other mental health subreddits* — anxiety, ADHD,
-PTSD, BPD — where everyone is writing first-person distress narrative and only the disorder
+So I changed the comparison group to *other mental health subreddits*, anxiety, ADHD,
+PTSD, BPD, where everyone is writing first-person distress narrative and only the disorder
 varies. The effect halved, to *r* = .21, stable across all three years.
 
 **About half of the published-looking result was register, not depression.** If I show one
@@ -57,12 +57,12 @@ writing:
 - **Agitation:** anxiety, social anxiety, health anxiety
 - **Dejection:** depression, lonely, suicide watch
 
-Ought self measured as first-person modal obligation — "I should", "I have to", "I need to".
+Ought self measured as first-person modal obligation, "I should", "I have to", "I need to".
 The crucial restriction is **first person**. "You should see a doctor" is a modal of
 obligation with no ought self in it at all, and support forums are drowning in it. Counting
 modals without that restriction measures how much advice a community gives.
 
-Ideal self measured as counterfactual regret and unmet aspiration — "I wish", "if only",
+Ideal self measured as counterfactual regret and unmet aspiration, "I wish", "if only",
 "I should have been", "I used to be".
 
 Result: obligation language runs slightly *higher* in the anxiety family. Regret and unmet
@@ -72,7 +72,7 @@ direction and magnitude in all three years.
 
 **That's Higgins' prediction, in the direction he predicted, in language, at scale.**
 
-## 5. Why I don't oversell it (60s — say this unprompted)
+## 5. Why I don't oversell it (60s, say this unprompted)
 
 Three things, and I'd rather say them than have them found.
 
@@ -82,16 +82,16 @@ The crossover is carried by the ideal side. That's weaker than a true double dis
 
 **My real sample size is six, not 197,000.** The post-level confidence interval is
 hairline-thin, but it describes uncertainty about *these six communities*. Treat each
-community as one data point and the exact permutation test gives *p* = .10 — which is the
+community as one data point and the exact permutation test gives *p* = .10, which is the
 *floor* for a three-versus-three split. The rank separation is perfect, all three anxiety
 communities on one side, all three depression communities on the other. So the evidence is
 as strong as six communities can make it, and six communities isn't much.
 
 **The corrections went against me and I kept them.** Hand-coding a validation sample showed
-my obligation dictionary was catching "I had to call the cops" — past-tense external
+my obligation dictionary was catching "I had to call the cops", past-tense external
 circumstance, not an internalized standard. Also epistemic "I must be underestimating
 myself," which is a guess, not a duty. Fixing those weakened the effect from 0.144 to
-0.133. I applied them anyway, and `had to` was never in my preregistration in the first
+0.134. I applied them anyway, and `had to` was never in my preregistration in the first
 place.
 
 ## 6. Close (20s)
@@ -102,7 +102,7 @@ advice-giving leaking into the obligation measure. Whole thing reproduces from a
 checkout.
 
 What I'd want next: the DAIC-WOZ severity scores, more communities per family so the unit
-of analysis isn't six, and a human coder on the validation sample instead of me.
+of analysis isn't six, and an independent coder on the validation sample.
 
 ---
 
@@ -117,11 +117,21 @@ r/personalfinance, which shows the register axis cuts across the clinical one.
 text: on a post with four unambiguous first-person pronouns, `liwc_1st_pers` reads 0. I
 computed my own and validated it against the dataset's independent tokenizer at *r* = .9995.
 
-**"Why not a mixed model with author random effects?"** That was the plan. The release
-ships one post per author per subreddit-window, so within-person modeling isn't possible.
-20,575 authors appear in two or more windows at multi-month gaps, which supports a coarse
-between-window contrast but not the "does language shift *before* symptoms" question. I
-descoped it rather than dress it up.
+**"Why not a mixed model with author random effects?"** I ran one, in reduced form. The
+release ships one post per author per subreddit-window, so the planned design was
+impossible, but 20,519 authors appear in two or more windows about a year apart. Within a
+window, more self-distanced language goes with less self-criticism.
+
+The lagged version is where it gets interesting. It comes out significant with the opposite
+sign, and it's an artifact. 92% of those authors have exactly two observations, and when
+you subtract a person's own mean from two numbers you get +d/2 and -d/2, so the lagged pair
+is forced to be the mirror of the same-window pair. For everybody. By arithmetic. The
+script checks it: the ratio comes out -1.025 against the -1.000 an exact artifact predicts.
+Restrict to people with all three windows and the interval crosses zero.
+
+So there's a within-person association and no evidence of temporal ordering. The "does
+language shift *before* symptoms" question needs days-to-weeks spacing and this panel is
+annual. I'd rather say that than dress it up.
 
 **"Could this be COVID?"** The 2020 window overlaps the pandemic onset. That's why the
 primary analysis is 2019 with 2018 and 2020 held out. The effect is the same size in all

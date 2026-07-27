@@ -1,7 +1,7 @@
 # Citing this work
 
 The analysis code is MIT licensed. The **data is not mine** and has its own citation
-requirement — cite Low et al. for the dataset, not this repository.
+requirement, cite Low et al. for the dataset, not this repository.
 
 ## Dataset (cite this if you use the data)
 
@@ -19,7 +19,7 @@ Higgins ET. Self-discrepancy: a theory relating self and affect. *Psychological 
 
 Gilbert P, Clarke M, Hempel S, Miles JNV, Irons C. Criticizing and reassuring oneself: An
 exploration of forms, styles and reasons in female students. *British Journal of Clinical
-Psychology*. 2004;43(1):31-50. — source of the FSCRS item content used to seed the
+Psychology*. 2004;43(1):31-50., source of the FSCRS item content used to seed the
 self-criticism lexicon.
 
 ## The I-talk effect this project conceptually replicates
@@ -33,5 +33,5 @@ synthesis. *Journal of Personality and Social Psychology*. 2019;116(5):817-834.
 
 ## This repository
 
-Nihal A. Self-distancing, self-criticism, and the ought/ideal split in Reddit mental
+Mettu A. Self-distancing, self-criticism, and the ought/ideal split in Reddit mental
 health language. 2026. https://github.com/abhaymettu/reddit-selfdistance
