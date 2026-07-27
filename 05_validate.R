@@ -16,6 +16,48 @@
 # someone who has not read this script.
 
 suppressMessages({library(data.table); library(stringi)})
+
+# --- Scoring mode ---------------------------------------------------------------------
+# This runs BEFORE the sample is built, and exits. Scoring used to fall through the
+# generation code first, which overwrote out/validation_sample.csv and destroyed the
+# coding it was about to score. Anyone who coded 200 rows and then ran --score lost them.
+if ("--score" %in% commandArgs(TRUE)) {
+  v <- fread("out/validation_sample.csv")
+  # Which coding to score. true_label is the human column and stays the default, so
+  # the preregistered check is unchanged. machine_label holds an LLM coding of the same
+  # 200 rows, kept in a separate column precisely so it cannot be mistaken for the
+  # human pass, and so the two can be compared once both exist.
+  a <- commandArgs(TRUE)
+  col <- if (length(i <- which(a == "--col"))) a[i + 1] else "true_label"
+  if (!col %in% names(v)) stop("no such column: ", col)
+  if (all(is.na(v[[col]])))
+    stop(col, " is empty. Code the sample first (see NEXT_STEPS.md step 2).")
+  v <- v[!is.na(get(col))]
+  cat("Scoring column:", col,
+      if (col != "true_label") "  [NOT an independent human coding]" else "", "\n\n")
+  for (mk in unique(v$marker)) {
+    s <- v[marker == mk]
+    tp <- s[flagged == 1 & get(col) == 1, .N]; fp <- s[flagged == 1 & get(col) == 0, .N]
+    fn <- s[flagged == 0 & get(col) == 1, .N]
+    cat(sprintf("%-9s n=%3d  precision=%.2f  recall(vs hard negatives)=%.2f\n",
+                mk, nrow(s), tp / (tp + fp), tp / (tp + fn)))
+    if (mk == "ought" && tp / (tp + fp) < 0.70)
+      cat("  ** precision < .70: PREREG requires H2a be downgraded to exploratory **\n")
+  }
+  # Agreement between the two codings, once the human column is filled in. This is the
+  # number that says whether the LLM pass was worth anything.
+  if (all(c("true_label", "machine_label") %in% names(v)) &&
+      !all(is.na(v$true_label)) && !all(is.na(v$machine_label))) {
+    b <- v[!is.na(true_label) & !is.na(machine_label)]
+    po <- mean(b$true_label == b$machine_label)
+    pe <- mean(b$true_label) * mean(b$machine_label) +
+          (1 - mean(b$true_label)) * (1 - mean(b$machine_label))
+    cat(sprintf("\nHuman vs machine on %d rows: agreement %.3f, Cohen's kappa %.3f\n",
+                nrow(b), po, (po - pe) / (1 - pe)))
+  }
+  quit(status = 0)
+}
+
 source("lexicons.R")
 
 set.seed(20260726)
@@ -85,19 +127,3 @@ cat("     rather than their worth.\n\n")
 
 cat("Once true_label is filled in, precision/recall come from:\n")
 cat("  Rscript 05_validate.R --score\n")
-
-# --- Scoring mode ---------------------------------------------------------------------
-if ("--score" %in% commandArgs(TRUE)) {
-  v <- fread("out/validation_sample.csv")
-  if (all(is.na(v$true_label))) stop("true_label is empty. Code the sample first.")
-  v <- v[!is.na(true_label)]
-  for (mk in unique(v$marker)) {
-    s <- v[marker == mk]
-    tp <- s[flagged == 1 & true_label == 1, .N]; fp <- s[flagged == 1 & true_label == 0, .N]
-    fn <- s[flagged == 0 & true_label == 1, .N]
-    cat(sprintf("%-9s n=%3d  precision=%.2f  recall(vs hard negatives)=%.2f\n",
-                mk, nrow(s), tp / (tp + fp), tp / (tp + fn)))
-    if (mk == "ought" && tp / (tp + fp) < 0.70)
-      cat("  ** precision < .70: PREREG requires H2a be downgraded to exploratory **\n")
-  }
-}
