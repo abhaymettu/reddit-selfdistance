@@ -165,17 +165,35 @@ The validation coding is **provisional and machine-coded, not human-rated.**
 `VALIDATION.md` is explicit about that, and `out/validation_sample.csv` is generated with a
 fixed seed and a blank label column, ready for a human coder.
 
-## Tier 3 — descoped, not deferred
+## Tier 3 — reduced, and one artefact worth the whole section
 
-The plan called for mixed-effects models on users with ≥5 posts spanning ≥30 days. The
-release ships one post per author per subreddit-window, so that design cannot be run.
-What exists is a thin panel: 20,575 authors appear in ≥2 windows and 1,682 in all three,
-at most three observations each at irregular multi-month gaps.
+```{r tier3}
+fread("out/tier3_results.csv")[, .(model, n, b = signif(b, 3),
+      ci = sprintf("[%.5f, %.5f]", lo, hi))]
+```
 
-That supports a coarse between-window within-person contrast. It does **not** support the
-question that motivated Tier 3 — whether self-distanced language shifts *before* symptom
-language — which needs post-level sequencing this data does not contain. Reframing it as a
-between-window contrast is honest; calling it a prediction model would not be.
+The planned design (≥5 posts spanning ≥30 days) is impossible: one post per author per
+subreddit-window. The usable panel is 20,519 authors across ≥2 windows — observations about
+a **year** apart. All predictors person-mean-centred, so estimates are within-person.
+
+Same window, more self-distanced language goes with **less** self-criticism, the direction
+the self-distancing literature predicts.
+
+**The lagged model flips sign and looks significant. It is an artefact.** 91.8% of these
+authors have exactly two windows, and for two observations person-mean-centring forces
+`x_c = (d/2, −d/2)` and `y_c = (e/2, −e/2)`. The contemporaneous pair is `(d/2, e/2)` and the
+lagged pair is `(d/2, −e/2)` — exactly the negative, by construction, for every such author.
+A lagged regression on two-observation people is mechanically the mirror of the
+contemporaneous one.
+
+`06_tier3.R` verifies this numerically instead of asserting it: on two-window authors the
+contemporaneous slope is −0.000589 and the lagged +0.000604, a ratio of **−1.025** against
+the −1.000 an exact artefact predicts. Restricting to authors with all three windows gives an
+interval that crosses zero, and even that carries small-T dynamic panel (Nickell) bias.
+
+So: a within-person association in the same window, and **no evidence of temporal
+ordering**. The question that motivated Tier 3 needs days-to-weeks resolution; this panel is
+annual, and no amount of modelling fixes that.
 
 ## Limitations
 
@@ -215,6 +233,7 @@ Rscript test_lexicons.R   # 41 assertions on the dictionaries — run before tru
 Rscript 02_features.R     # text -> out/features.rds  (the only pass over raw text)
 Rscript 03_tier1.R
 Rscript 04_tier2.R
+Rscript 06_tier3.R        # Tier 3 reduced (needs lme4)
 Rscript 05_validate.R     # regenerate the hand-coding sample
 quarto render report.qmd
 ```

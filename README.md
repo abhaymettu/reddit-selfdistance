@@ -15,7 +15,7 @@ the target. Tier 1 below is the replication groundwork that has to hold first.
 | 0 | Data audit / go-no-go | done |
 | 1 | I-talk vs depression grouping | **done — see Findings** |
 | 2 | Ought vs ideal double dissociation | **done — supported, with caveats** |
-| 3 | Within-person over time | **descoped, see below** |
+| 3 | Within-person over time | **done in reduced form — see below** |
 | 4 | Limitations | below, and in `report.qmd` |
 
 ## Data
@@ -49,10 +49,11 @@ Rscript test_lexicons.R # 41 dictionary assertions
 Rscript 02_features.R   # text -> out/features.rds  (the one expensive pass, ~3 min)
 Rscript 03_tier1.R      # Tier 1 results + figure
 Rscript 04_tier2.R      # Tier 2 results
+Rscript 06_tier3.R      # Tier 3 reduced (needs lme4)
 quarto render report.qmd
 ```
 
-R 4.5, `data.table`, `stringi`, `ggplot2`. No other dependencies.
+R 4.5, `data.table`, `stringi`, `ggplot2`, and `lme4` for Tier 3 only.
 
 ## Findings (Tier 1)
 
@@ -178,16 +179,47 @@ The validation coding is **provisional and machine-coded, not human-rated** — 
 not leak into the ought measure, which is the single confound the design rests on. Run it
 before trusting any Tier 2 number.
 
-## Tier 3 descoped
+## Findings (Tier 3, reduced)
 
-The plan called for mixed-effects models on users with ≥5 posts spanning ≥30 days. **The
-release ships one post per author per subreddit-window**, so that design is impossible
-here. What exists is a thin panel: 20,575 authors appear in ≥2 windows, 1,682 in all 3 —
-at most 3 observations each, at irregular multi-month gaps. That supports a coarse
-within-person contrast, not the "does self-distancing shift *before* symptom language"
-question, which needs post-level sequencing this data does not have. Reframing it as a
-between-window within-person contrast is honest; calling it a prediction model would not
-be.
+The original design — mixed models on users with ≥5 posts spanning ≥30 days — is impossible
+here: the release ships one post per author per subreddit-window. What exists is a thin,
+irregular panel of authors appearing in more than one of the three windows, i.e.
+observations about a **year** apart.
+
+**42,715 author-windows / 20,519 authors** with ≥2 windows; 1,677 with all three. All
+predictors are person-mean-centred, so estimates are within-person.
+
+| Model | n | b | 95% CI |
+|---|---|---|---|
+| same window (negative control) | 42,715 | −0.000514 | [−0.00064, −0.00039] |
+| naive lagged: distancing(t) → self-crit(t+1) | 19,343 | +0.000548 | [0.00035, 0.00075] |
+| lagged, 3-window authors only | 3,354 | +0.000356 | [−0.00013, 0.00084] |
+
+Within the same window, more self-distanced language goes with **less** self-criticism —
+the direction the self-distancing literature predicts.
+
+### The lagged result is an artefact, and catching it is the point
+
+The naive lagged model flips sign and looks significant. It is arithmetic, not psychology.
+
+**91.8% of these authors have exactly two windows.** For someone with two observations,
+person-mean-centring forces `x_c = (d/2, −d/2)` and `y_c = (e/2, −e/2)`. The contemporaneous
+pair is `(d/2, e/2)`; the lagged pair is `(d/2, −e/2)` — *exactly the negative, by
+construction, for every such author*. So a lagged regression on two-observation people is
+mechanically the mirror of the contemporaneous one and contains no information about time.
+
+The script verifies this numerically rather than asserting it: on two-window authors the
+contemporaneous slope is −0.000589 and the lagged slope +0.000604, a **ratio of −1.025**
+against the −1.000 an exact artefact predicts.
+
+Restricting the lag to authors observed in all three windows — where centring does not force
+a reversal — gives an interval that **crosses zero**. And even that estimate carries
+small-T dynamic panel (Nickell) bias.
+
+**Conclusion: there is a within-person association in the same window, and no evidence of
+temporal ordering.** The question that motivated Tier 3 — does self-distanced language shift
+*before* symptom language — needs days-to-weeks resolution. This panel is annual. It cannot
+answer it, and no amount of modelling will make it.
 
 ## Limitations
 
@@ -210,6 +242,7 @@ test_lexicons.R 41 assertions — run before trusting any Tier 2 number
 02_features.R   text -> per-post features (the only pass over raw text)
 03_tier1.R      Tier 1 estimation, robustness, figure
 04_tier2.R      Tier 2 double dissociation + community-level permutation test
+06_tier3.R      Tier 3 reduced: within-person panel + the centring-artefact check
 05_validate.R   generates the hand-coding sample; --score computes precision
 PREREG.md       Tier 2 hypotheses, committed before 04_tier2.R existed
 VALIDATION.md   dictionary error classes found and fixed
